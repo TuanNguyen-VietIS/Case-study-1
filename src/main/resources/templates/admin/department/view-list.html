@@ -45,6 +45,7 @@
             <td th:text="${idx.count}"></td>
             <td th:text="${department.name}"></td>
             <td>
+                <button th:onclick="|location.href='/admin/view-list-employees-in-dept/' + ${department.id}|" th:text="#{table.button.view}">Xem</button>
                 <button th:onclick="|location.href='/admin/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
                 <button th:onclick="'deleteDepartment(' + ${department.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
             </td>

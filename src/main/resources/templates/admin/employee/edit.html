@@ -13,10 +13,6 @@
 
     <h2 th:text="#{message.employee-edit}">Sửa thông tin nhân viên</h2>
 
-<!--    <div id="toast-error" class="color: red; text-align: center; font-size: 16px; margin: 20px 0;">-->
-<!--        <span th:text="${errorMessage}"></span>-->
-<!--    </div>-->
-
     <form th:object="${employee}" class="edit-form" action="/admin/edit-employee" method="post" enctype="multipart/form-data">
         <input type="hidden" th:name="id" th:field="*{id}"/>
 
@@ -51,40 +47,22 @@
         <a href="/admin/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
     </form>
 
-    <div th:if="${error != null}">
-        <p th:text="${error}" style="color: red; font-weight: bold; border: 1px solid red; padding: 10px; background-color: #f8d7da; border-radius: 5px;">
-        </p>
-    </div>
-
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
         function previewImage(event) {
             const imagePreview = document.getElementById('imagePreview');
 
-            // Nếu người dùng chọn một file mới
             if (event.target.files && event.target.files[0]) {
                 const reader = new FileReader();
 
-                // Khi đọc file hoàn tất, thay đổi src của thẻ img
                 reader.onload = function(e) {
-                    imagePreview.src = e.target.result;  // Đặt src là URL của ảnh mới
+                    imagePreview.src = e.target.result;
                 };
 
-                // Đọc file ảnh mới
                 reader.readAsDataURL(event.target.files[0]);
             }
         }
-
-        // window.onload = function () {
-        //     setTimeout(function () {
-        //         var toastElement = document.getElementById("toast-error");
-        //         console.log(toastElement)
-        //         if (toastElement) {
-        //             toastElement.style.display = "none";
-        //         }
-        //     }, 3000);
-        // };
     </script>
 </body>
 </html>
