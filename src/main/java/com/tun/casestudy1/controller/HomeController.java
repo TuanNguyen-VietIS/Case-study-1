@@ -42,4 +42,9 @@ public class HomeController {
         return "login";
     }
 
+    @GetMapping("/error1")
+    public String handleError() {
+        return "access_denied";
+    }
+
 }

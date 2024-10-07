@@ -34,7 +34,7 @@ public class RoleBasedAccessFilter implements Filter {
         String userRole = (String) session.getAttribute("userRole");
 
         if (requestURI.startsWith("/admin") && !"ADMIN".equals(userRole)) {
-            httpResponse.sendError(HttpServletResponse.SC_FORBIDDEN, "Access Denied");
+            httpResponse.sendRedirect("/error1");
             return;
         }
 
