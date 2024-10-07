@@ -1,0 +1,66 @@
+/* Tiêu đề của trang */
+h2 {
+    margin-bottom: 20px; /* Khoảng cách dưới tiêu đề */
+    font-size: 24px; /* Kích thước chữ */
+    color: #333; /* Màu chữ */
+    text-align: center; /* Căn giữa tiêu đề */
+}
+
+/* Thiết lập cho form */
+.edit-form {
+    background-color: #ffffff; /* Màu nền cho form */
+    padding: 40px; /* Khoảng cách bên trong */
+    border-radius: 10px; /* Bo góc cho form */
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.4); /* Đổ bóng cho form */
+    width: 400px; /* Chiều rộng cố định cho form */
+    margin: 0 auto; /* Căn giữa form */
+}
+
+/* Thiết lập cho các label trong form */
+.edit-form label {
+    display: block; /* Hiển thị theo hàng */
+    margin-bottom: 10px; /* Khoảng cách dưới label */
+    font-size: 14px; /* Kích thước chữ */
+    color: #555; /* Màu chữ */
+}
+
+/* Thiết lập cho các input trong form */
+.edit-form input[type="text"],
+.edit-form input[type="email"] {
+    width: 100%; /* Chiều rộng 100% cho input */
+    padding: 10px; /* Khoảng cách bên trong input */
+    margin-bottom: 20px; /* Khoảng cách dưới input */
+    border: 1px solid #ccc; /* Đường viền cho input */
+    border-radius: 5px; /* Bo góc cho input */
+    font-size: 14px; /* Kích thước chữ */
+}
+
+/* Thiết lập cho nút lưu */
+.edit-form button{
+    background-color: #5cb85c; /* Màu nền cho nút */
+    color: white; /* Màu chữ */
+    padding: 10px 20px; /* Khoảng cách cho nút */
+    border: none; /* Không có đường viền */
+    border-radius: 5px; /* Bo góc cho nút */
+    font-size: 16px; /* Kích thước chữ */
+    cursor: pointer; /* Con trỏ khi hover */
+    width: 100%; /* Chiều rộng 100% cho nút */
+}
+
+/* Hiệu ứng hover cho nút lưu */
+.edit-form button:hover {
+    background-color: #4cae4c; /* Màu nền khi hover */
+}
+
+/* Thiết lập cho liên kết hủy */
+.edit-form a {
+    display: block; /* Hiển thị như một khối */
+    margin-top: 10px; /* Khoảng cách trên liên kết */
+    text-align: center; /* Căn giữa liên kết */
+    color: #007bff; /* Màu chữ cho liên kết */
+    text-decoration: none; /* Không gạch chân */
+}
+
+.edit-form a:hover {
+    text-decoration: underline; /* Gạch chân khi hover */
+}

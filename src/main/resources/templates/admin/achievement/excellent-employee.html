@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Home</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h1 th:text="#{message.excellent-employee}">10 gương mặt xuất sắc nhất công ty</h1>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Nhân viên</th>
+            <th th:text="#{table.image}">Ảnh</th>
+            <th th:text="#{table.department-name}">Tên phòng ban</th>
+            <th th:text="#{table.number-of-achievement}">Số thành tích</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="excellentEmployee,idx : ${excellentEmployees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${excellentEmployee.name}"></td>
+            <td>
+                <img th:if="${excellentEmployee.imageUrl != null}"
+                     th:src="@{/admin/files/{filename}(filename=${excellentEmployee.imageUrl})}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+                <p th:if="${excellentEmployee.imageUrl == null}">Không có ảnh</p>
+            </td>
+            <td th:text="${excellentEmployee.nameOfDept}"></td>
+            <td th:text="${excellentEmployee.totalAchievements}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

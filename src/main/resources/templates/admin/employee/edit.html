@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.employee-edit}">Sửa thông tin nhân viên</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2 th:text="#{message.employee-edit}">Sửa thông tin nhân viên</h2>
+
+<!--    <div id="toast-error" class="color: red; text-align: center; font-size: 16px; margin: 20px 0;">-->
+<!--        <span th:text="${errorMessage}"></span>-->
+<!--    </div>-->
+
+    <form th:object="${employee}" class="edit-form" action="/admin/edit-employee" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:name="id" th:field="*{id}"/>
+
+        <label th:text="#{table.employee-name}">Tên:</label>
+        <input type="text" th:name="name" th:field="*{name}" required/>
+
+        <label for="image-file">Ảnh:</label>
+        <img id="preview-image"
+             th:src="@{/admin/employees/files/{filename}(filename=${employee.imageUrl})}"
+             alt="Ảnh thẻ"
+             style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+        <input type="file" id="image-file" th:name="image-file" accept="image/*" onchange="previewImage(event)"/>
+
+        <label th:text="#{table.department-name}">Phòng ban:</label>
+        <select th:name="departmentId" required>
+            <option th:each="dept : ${departments}"
+                    th:value="${dept.id}"
+                    th:text="${dept.name}"
+                    th:selected="${dept.id == employee.departmentId}">
+        </select>
+
+        <label th:text="#{table.edit.level}">Cấp độ (Từ 1 đến 10):</label>
+        <input type="text" th:name="level" th:field="*{level}" required/>
+
+        <label th:text="#{table.phone-number}">Số điện thoại:</label>
+        <input type="text" th:name="phoneNumber" th:field="*{phoneNumber}" required/>
+
+        <label th:text="#{table.salary}">Lương:</label>
+        <input type="text" th:name="salary" th:field="*{salary}" required/>
+
+        <button type="submit" th:text="#{table.button.save}">Lưu</button>
+        <a href="/admin/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
+    </form>
+
+    <div th:if="${error != null}">
+        <p th:text="${error}" style="color: red; font-weight: bold; border: 1px solid red; padding: 10px; background-color: #f8d7da; border-radius: 5px;">
+        </p>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function previewImage(event) {
+            const imagePreview = document.getElementById('imagePreview');
+
+            // Nếu người dùng chọn một file mới
+            if (event.target.files && event.target.files[0]) {
+                const reader = new FileReader();
+
+                // Khi đọc file hoàn tất, thay đổi src của thẻ img
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;  // Đặt src là URL của ảnh mới
+                };
+
+                // Đọc file ảnh mới
+                reader.readAsDataURL(event.target.files[0]);
+            }
+        }
+
+        // window.onload = function () {
+        //     setTimeout(function () {
+        //         var toastElement = document.getElementById("toast-error");
+        //         console.log(toastElement)
+        //         if (toastElement) {
+        //             toastElement.style.display = "none";
+        //         }
+        //     }, 3000);
+        // };
+    </script>
+</body>
+</html>

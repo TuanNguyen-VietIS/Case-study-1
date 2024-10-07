@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <title th:text="#{message.department-management}">Danh sách phòng ban</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <style>
+        .title-button {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            margin-bottom: -15px;
+        }
+
+        .title-button h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <div class="title-button">
+        <h2 th:text="#{message.department-management}">Quản lý phòng ban</h2>
+        <button th:onclick="|location.href='/admin/add-department'|" th:text="#{table.button.add}">Thêm</button>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.department-name}">Tên</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="department,idx : ${departments}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${department.name}"></td>
+            <td>
+                <button th:onclick="|location.href='/admin/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteDepartment(' + ${department.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function deleteDepartment(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa phòng ban này không?')) {
+                location.href = '/admin/delete-department/' + id;
+            }
+        }
+    </script>
+
+</body>
+</html>

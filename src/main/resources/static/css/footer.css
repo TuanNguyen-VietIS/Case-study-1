@@ -1,0 +1,30 @@
+/* Đặt footer để dính ở dưới cùng màn hình */
+.footer-container {
+    background-color: #333;
+    color: #fff;
+    padding: 20px 0;
+    text-align: center;
+    margin: 0;
+}
+
+.footer-container .footer-nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0;
+    display: flex;
+    justify-content: center;
+}
+
+.footer-container .footer-nav ul li {
+    margin: 0 15px;
+}
+
+.footer-container .footer-nav ul li a{
+    color: #fff;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.footer-container .footer-nav ul li a:hover {
+    text-decoration: underline;
+}

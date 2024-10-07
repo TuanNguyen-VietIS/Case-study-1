@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<header>
+    <div class="header-left">
+        <div class="logo">
+            <img src="/images/Oreo-Logo.png" alt="Logo" />
+            <p class="title" th:text="#{company}">Công ty cổ phần ABC</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <ul class="header-list">
+            <li class ="header-list-text" th:text="#{homepage.sub1}">Chúng tôi làm gì</li>
+            <li class ="header-list-text" th:text="#{homepage.sub2}">Chúng tôi là ai</li>
+            <li class ="header-list-text" th:text="#{homepage.sub3}">Liên hệ</li>
+        </ul>
+    </div>
+<!--    <div class="language-selector">-->
+<!--        <a class="nav-link" th:href="@{/login(lang='vi')}">Tiếng Việt</a>-->
+<!--        <a class="nav-link" th:href="@{/login(lang='en')}">English</a>-->
+<!--    </div>-->
+</header>
+</body>
+</html>

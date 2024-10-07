@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+</head>
+<body>
+    <nav class="admin-nav">
+        <ul>
+            <li><a th:href="@{/admin/adminHome}" th:text="#{header.adminHome}">Trang chủ</a></li>
+            <li><a th:href="@{/admin/employee-management}" th:text="#{header.employee-management}">Quản lý nhân viên</a></li>
+            <li><a th:href="@{/admin/department-management}" th:text="#{header.department-management}">Quản lý phòng ban</a></li>
+            <li><a th:href="@{/admin/account-management}" th:text="#{header.account-management}">Quản lý tài khoản</a></li>
+            <li class="dropdown">
+                <span th:text="#{header.achievement-management}">Quản lý thành tích</span>
+                <div class="sub-menu">
+                    <a th:href="@{/admin/create-achievement}" th:text="#{header.add-achievement}">Tạo mới thành tích</a>
+                    <a th:href="@{/admin/view-people-achievements}" th:text="#{header.view-employee-achievement}">Xem tổng hợp thành tích cá nhân</a>
+                    <a th:href="@{/admin/view-departments-achievements}" th:text="#{header.view-department-achievement}">Xem tổng hợp thành tích của phòng</a>
+                </div>
+            </li>
+            <li><a th:href="@{/admin/logout}" th:text="#{header.logout}">Đăng xuất</a></li>
+        </ul>
+    </nav>
+</body>
+</html>

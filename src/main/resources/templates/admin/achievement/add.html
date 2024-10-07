@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.add-achievement}">Ghi nhận thành tích/kỷ luật</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2 th:text="#{message.add-achievement}">Ghi nhận thành tích/kỷ luật cho nhân viên</h2>
+
+    <form class="edit-form" action="/admin/add-achievement" method="post">
+        <label th:text="#{table.employee-name}">Nhân viên:</label>
+        <select th:name="employeeId" required>
+            <option th:each="employee : ${employees}"
+                    th:value="${employee.id}"
+                    th:text="${employee.id} + ' - ' + ${employee.name} +
+                        (${employee.department != null} ? ' - ' + ${employee.department.name} : '')">
+        </select>
+
+        <label for="type_achivement" th:text="#{table.type}">Loại:</label>
+        <select id="type_achivement" th:name="type" required>
+            <option value="1" th:text="#{table.achieve}">Thành tích</option>
+            <option value="0" th:text="#{table.discip}">Kỷ luật</option>
+        </select>
+
+        <label th:text="#{table.reason}">Lý do:</label>
+        <input type="text" th:name="reason" required/>
+
+        <label for="dateOfRecognition" th:text="#{table.daterecog}">Ngày ghi nhận:</label>
+        <input type="date" id="dateOfRecognition" th:name="date" required />
+
+        <button type="submit" th:text="#{table.button.add}">Tạo</button>
+        <a href="/admin/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
+    </form>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

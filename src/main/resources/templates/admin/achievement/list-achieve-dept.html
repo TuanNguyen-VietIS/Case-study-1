@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.view-department-achievement}">Thành tích phòng ban</title>
+
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2 th:text="#{message.view-department-achievement}">Tổng hợp thành tích các phòng ban</h2>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.department-name}">Phòng ban</th>
+            <th th:text="#{table.total-achievement}">Tổng thành tích</th>
+            <th th:text="#{table.total-discipline}">Tổng kỷ luật</th>
+            <th th:text="#{table.reward-point}">Điểm thưởng</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="achievement,idx : ${listAchievements}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${achievement.name}"></td>
+            <td th:text="${achievement.totalAchievements}"></td>
+            <td th:text="${achievement.totalDisciplinary}"></td>
+            <td th:text="${achievement.rewardPoints}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

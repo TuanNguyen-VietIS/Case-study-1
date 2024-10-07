@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="#{header.login}">Login</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css"/>
+    <link rel="stylesheet" type="text/css" href="/css/login.css">
+    <link rel="stylesheet" type="text/css" href="/css/header.css"/>
+</head>
+<body>
+    <div th:replace="~{fragments/header :: header}"></div>
+
+    <div style="display: flex; flex-direction: column">
+        <a class="nav-link" th:href="@{/login(lang='vi')}">Tiếng Việt</a>
+        <a class="nav-link" th:href="@{/login(lang='en')}">Tiếng Anh</a>
+        <a class="nav-link" th:href="@{/login(lang='jp')}">Tiếng Nhật</a>
+    </div>
+
+    <h2 th:text="#{homepage.login}">Vui lòng đăng nhập để sử dụng hệ thống</h2>
+
+    <form th:action="@{/login}" method="post">
+        <label for="username">Email:</label>
+        <input type="text" id="username" name="username" required>
+
+        <label for="password" th:text="#{table.password}">Mật khẩu:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="submit" th:text="#{header.login}">Đăng nhập</button>
+
+        <div th:if="${error}" class="error-message">
+            <p th:text="${error}"></p>
+        </div>
+    </form>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+</body>
+</html>

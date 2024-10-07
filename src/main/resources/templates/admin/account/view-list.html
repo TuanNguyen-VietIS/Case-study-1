@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.account-management}">Danh sách tài khoản</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <style>
+        .title-button {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: column;
+            padding: 10px;
+            gap: 10px;
+            margin-bottom: -15px;
+        }
+
+        .title-button h2 {
+            margin: 0;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <div class="title-button">
+        <h2 th:text="#{message.account-management}">Quản lý tài khoản người dùng</h2>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.employee-name}">Tên</th>
+            <th>Email</th>
+            <th th:text="#{table.password}">Mật khẩu</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee,idx : ${employees}">
+            <td th:text="${idx.count}"></td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${employee.email}"></td>
+            <td th:text="${employee.password}"></td>
+            <td th:if="${employee.role.name() == 'USER'}">
+                <button th:onclick="|location.href='/admin/edit-account/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteAccount(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function deleteAccount(id) {
+            if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
+                location.href = '/admin/delete-account/' + id; // Gọi phương thức xóa
+            }
+        }
+    </script>
+
+</body>
+</html>
