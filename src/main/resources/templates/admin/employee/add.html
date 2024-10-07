@@ -8,10 +8,13 @@
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
     <style>
-        .avatar {
+        #preview-image {
             width: 60px;
             height: 60px;
             object-fit: cover;
+            border-radius: 50%;
+            display: block;
+            margin-top: 10px;
         }
     </style>
 </head>
@@ -43,7 +46,7 @@
 
         <label for="image-file" th:text="#{table.image}">Ảnh:</label>
         <input type="file" id="image-file" th:name="image-file" accept="image/*" onchange="previewImage(event)"/>
-        <img id="preview-image" src="" alt="Ảnh đã chọn" class="avatar"/>
+        <img id="preview-image" src="" alt="Ảnh đã chọn"/>
 
         <label for="gender" th:text="#{table.gender}">Giới tính:</label>
         <select id="gender" th:name="gender" required>
