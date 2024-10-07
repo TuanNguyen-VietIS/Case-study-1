@@ -95,6 +95,13 @@ public class AdminController {
         return "redirect:/";
     }
 
+    @GetMapping("/view-list-employees-in-dept/{id}")
+    public String getListEmployeesInDeptPage(@PathVariable("id") int id, Model model) {
+        List<Employee> employees = employeeService.getListEmployeesInDept(id);
+        model.addAttribute("employees", employees);
+        return "admin/employee/view-list-employee-in-dept";
+    }
+
     // Get Add View
     @GetMapping("/add-department")
     public String getAddDepartmentPage(Model model) {

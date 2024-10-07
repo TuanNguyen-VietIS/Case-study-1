@@ -101,4 +101,8 @@ public class EmployeeService implements IService<Employee>{
         return employeeRepository.searchByQuery(query);
     }
 
+    public List<Employee> getListEmployeesInDept(int id) {
+        return employeeRepository.findAllByDepartmentId(id);
+    }
+
 }

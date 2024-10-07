@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.view-employee-department}">Danh sách nhân viên trong phòng ban</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <style>
+        .center-link {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px auto;
+            width: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2 th:text="#{message.view-employee-department}">Danh sách nhân viên trong phòng ban</h2>
+
+    <a href="/admin/department-management" th:text="#{table.edit.cancel}" class="center-link">Hủy</a>
+
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th th:text="#{table.image}">Ảnh</th>
+            <th th:text="#{table.employee-name}">Tên</th>
+            <th th:text="#{table.date-of-birth}">Ngày sinh</th>
+            <th th:text="#{table.department-name}">Phòng ban</th>
+            <th th:text="#{table.level}">Cấp độ</th>
+            <th th:text="#{table.phone-number}">Số điện thoại</th>
+            <th th:text="#{table.salary}">Lương</th>
+            <th th:text="#{table.action}">Hành động</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="employee,idx : ${employees}">
+            <td th:text="${idx.count}"></td>
+            <td>
+                <img th:if="${employee.imageUrl != null}"
+                     th:src="@{/admin/files/{filename}(filename=${employee.imageUrl})}"
+                     alt="Ảnh thẻ"
+                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+                <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
+            </td>
+            <td th:text="${employee.name}"></td>
+            <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
+            <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
+            <td th:text="${employee.level}"></td>
+            <td th:text="${employee.phoneNumber}"></td>
+            <td th:text="${employee.salary}"></td>
+        </tr>
+        </tbody>
+    </table>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+</body>
+</html>

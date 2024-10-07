@@ -23,4 +23,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer>{
             "OR e.level LIKE CONCAT('%', :searchValue, '%')" +
             "OR DATE_FORMAT(e.dOB, '%d/%m/%Y') LIKE CONCAT('%', :searchValue, '%')", nativeQuery = true)
     List<Employee> searchByQuery(@Param("searchValue") String searchValue);
+
+    List<Employee> findAllByDepartmentId(int id);
 }
