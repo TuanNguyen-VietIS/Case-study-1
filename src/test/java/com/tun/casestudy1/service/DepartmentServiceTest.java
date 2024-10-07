@@ -23,11 +23,6 @@ public class DepartmentServiceTest {
     @InjectMocks
     DepartmentService departmentService;
 
-//    @BeforeEach
-//    public void setup() {
-//        MockitoAnnotations.initMocks(this);
-//    }
-
     @Test
     public void testDeleteDepartment() {
         departmentService.delete(1);

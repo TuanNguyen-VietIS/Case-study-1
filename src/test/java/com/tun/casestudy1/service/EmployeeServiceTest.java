@@ -2,6 +2,7 @@ package com.tun.casestudy1.service;
 
 import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
 import com.tun.casestudy1.entity.Employee;
+import com.tun.casestudy1.enums.Role;
 import com.tun.casestudy1.repository.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,8 +19,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -30,11 +34,6 @@ public class EmployeeServiceTest {
 
     @InjectMocks
     private EmployeeService employeeService;
-
-//    @BeforeEach
-//    public void setup() {
-//        MockitoAnnotations.initMocks(this);
-//    }
 
     @Test
     public void testFindAll() {
@@ -97,5 +96,29 @@ public class EmployeeServiceTest {
         String query = "John";
         employeeService.searchUser(query);
         Mockito.verify(employeeRepository, Mockito.times(1)).searchByQuery(query);
+    }
+
+    @Test
+    public void testGetListEmployeesInDept() {
+        Employee employee1 = new Employee();
+        employee1.setId(1);
+        employee1.setName("Tuan Nguyen");
+        employee1.setRole(Role.USER);
+        employee1.setDepartmentId(10);
+
+        Employee employee2 = new Employee();
+        employee2.setId(1);
+        employee2.setName("Mi xoan");
+        employee2.setRole(Role.USER);
+        employee1.setDepartmentId(10);
+
+        Mockito.when(employeeRepository.findAllByDepartmentId(10)).thenReturn(Arrays.asList(employee1,employee2));
+
+        List<Employee> result = employeeService.getListEmployeesInDept(10);
+
+        assertNotNull(result);
+        assertEquals(2, result.size());
+        assertEquals("Tuan Nguyen", result.get(0).getName());
+        assertEquals("Mi xoan", result.get(1).getName());
     }
 }
