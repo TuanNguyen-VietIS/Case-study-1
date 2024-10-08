@@ -13,6 +13,10 @@ import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -39,6 +43,37 @@ public class EmployeeServiceTest {
     public void testFindAll() {
         employeeService.findAll();
         Mockito.verify(employeeRepository, Mockito.times(1)).findAll();
+    }
+
+    @Test
+    public void testFindPaginated() {
+        int page = 1;
+        int size = 5;
+
+        Employee employee1 = Employee.builder()
+                .name("Tuan")
+                .email("tuan@gmail.com")
+                .build();
+        Employee employee2 = Employee.builder()
+                .name("Tu")
+                .email("tu@gmail.com")
+                .build();
+
+        List<Employee> employees = Arrays.asList(employee1, employee2);
+
+        Page<Employee> pageResult = new PageImpl<>(employees);
+        Pageable pageable = PageRequest.of(page - 1, size);
+
+        Mockito.when(employeeRepository.findAll(PageRequest.of(0, 5))).thenReturn(pageResult);
+
+        Page<Employee> result = employeeService.findPaginated(page, size);
+
+        assertNotNull(result);
+        assertEquals(2, result.getTotalElements());
+        assertEquals(2, result.getContent().size());
+        assertEquals("Tuan", result.getContent().get(0).getName());
+
+        Mockito.verify(employeeRepository, Mockito.times(1)).findAll(pageable);
     }
 
     @Test

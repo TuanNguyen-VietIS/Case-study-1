@@ -1,0 +1,20 @@
+<div th:fragment="pagination-fragment(baseUrl, pageSize, totalPages, currentPage)">
+    <div class="page-size-container">
+        <label class="page-size-label" for="pageSize" th:text="#{option.pageSize}">Kích thước trang:</label>
+        <select id="pageSize" class="page-size-select" th:name="pageSize" th:value="${pageSize}" onchange="changePage()">
+            <option value="5" th:selected="${pageSize == 5}">5</option>
+            <option value="10" th:selected="${pageSize == 10}">10</option>
+            <option value="20" th:selected="${pageSize == 20}">20</option>
+            <option value="50" th:selected="${pageSize == 50}">50</option>
+        </select>
+    </div>
+
+    <div class="pagination">
+        <ul>
+            <li th:each="i : ${#numbers.sequence(1, totalPages)}">
+                <a th:href="|${baseUrl}?page=${i}&size=${pageSize}|" class="pagination-link" th:attr="data-page=${i}"
+                   th:text="${i}" th:class="${i == currentPage ? 'active' : ''}"></a>
+            </li>
+        </ul>
+    </div>
+</div>

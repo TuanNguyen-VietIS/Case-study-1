@@ -1,10 +1,14 @@
 package com.tun.casestudy1.service;
 
 import com.tun.casestudy1.entity.Department;
+import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.repository.DepartmentRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,6 +24,12 @@ public class DepartmentService implements IService<Department>{
     @Override
     public List<Department> findAll() {
         return departmentRepository.findAll();
+    }
+
+    public Page<Department> findPaginated(int page, int size)  {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return departmentRepository.findAll(pageable);
+
     }
 
     @Override

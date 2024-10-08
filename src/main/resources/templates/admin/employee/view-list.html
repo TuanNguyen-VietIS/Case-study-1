@@ -8,6 +8,7 @@
     <link rel="stylesheet" type="text/css" href="/css/footer.css">
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/css/pagination.css">
     <style>
         .title-button {
             display: flex;
@@ -35,41 +36,43 @@
 
     <table>
         <thead>
-        <tr>
-            <th>ID</th>
-            <th th:text="#{table.image}">Ảnh</th>
-            <th th:text="#{table.employee-name}">Tên</th>
-            <th th:text="#{table.date-of-birth}">Ngày sinh</th>
-            <th th:text="#{table.department-name}">Phòng ban</th>
-            <th th:text="#{table.level}">Cấp độ</th>
-            <th th:text="#{table.phone-number}">Số điện thoại</th>
-            <th th:text="#{table.salary}">Lương</th>
-            <th th:text="#{table.action}">Hành động</th>
-        </tr>
+            <tr>
+                <th>ID</th>
+                <th th:text="#{table.image}">Ảnh</th>
+                <th th:text="#{table.employee-name}">Tên</th>
+                <th th:text="#{table.date-of-birth}">Ngày sinh</th>
+                <th th:text="#{table.department-name}">Phòng ban</th>
+                <th th:text="#{table.level}">Cấp độ</th>
+                <th th:text="#{table.phone-number}">Số điện thoại</th>
+                <th th:text="#{table.salary}">Lương</th>
+                <th th:text="#{table.action}">Hành động</th>
+            </tr>
         </thead>
         <tbody id="employeeTableBody">
-        <tr th:each="employee,idx : ${employees}">
-            <td th:text="${idx.count}"></td>
-            <td>
-                <img th:if="${employee.imageUrl != null}"
-                     th:src="@{/admin/files/{filename}(filename=${employee.imageUrl})}"
-                     alt="Ảnh thẻ"
-                     style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
-                <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
-            </td>
-            <td th:text="${employee.name}"></td>
-            <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
-            <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
-            <td th:text="${employee.level}"></td>
-            <td th:text="${employee.phoneNumber}"></td>
-            <td th:text="${employee.salary}"></td>
-            <td th:if="${employee.role.name() == 'USER'}">
-                <button th:onclick="|location.href='/admin/edit-employee/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
-                <button th:onclick="'deleteEmployee(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
-            </td>
-        </tr>
+            <tr th:each="employee,idx : ${employees}">
+                <td th:text="${idx.count}"></td>
+                <td>
+                    <img th:if="${employee.imageUrl != null}"
+                         th:src="@{/admin/files/{filename}(filename=${employee.imageUrl})}"
+                         alt="Ảnh thẻ"
+                         style="width: 60px; height: 60px; border-radius: 50%; object-fit: cover;"/>
+                    <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
+                </td>
+                <td th:text="${employee.name}"></td>
+                <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
+                <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
+                <td th:text="${employee.level}"></td>
+                <td th:text="${employee.phoneNumber}"></td>
+                <td th:text="${employee.salary}"></td>
+                <td th:if="${employee.role.name() == 'USER'}">
+                    <button th:onclick="|location.href='/admin/edit-employee/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
+                    <button th:onclick="'deleteEmployee(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+                </td>
+            </tr>
         </tbody>
     </table>
+
+    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/employee-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
@@ -89,6 +92,30 @@
                 })
                 .catch(error => console.error('Error fetching data:', error));
         }
+
+        function changePage(page = 1) {
+            const pageSize = document.getElementById('pageSize').value;
+
+            fetch('/admin/employee-management?page=' + page + '&size=' + pageSize)
+                .then(response => response.text())
+                .then(html => {
+                    document.body.innerHTML = html;
+                })
+
+                .catch(error => console.error('Error fetching data:', error));
+        }
+
+        document.getElementById('pageSize').addEventListener('change', function() {
+            changePage(1);
+        });
+
+        document.querySelectorAll('.pagination-link').forEach(link => {
+            link.addEventListener('click', function(event) {
+                event.preventDefault();
+                const page = this.getAttribute('data-page');
+                changePage(page);
+            });
+        });
     </script>
 
 </body>

@@ -4,12 +4,10 @@ import com.tun.casestudy1.entity.Department;
 import com.tun.casestudy1.entity.EmployeeRecord;
 import com.tun.casestudy1.enums.Role;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -35,4 +33,12 @@ public class UpdateEmployeeDto {
     Integer departmentId;
 
     String imageUrl;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    LocalDate dOB;
+
+    @AssertTrue(message = "error.dOB")
+    public boolean isValidDOB() {
+        return dOB != null && !dOB.isBefore(LocalDate.of(1950, 1, 1)) && !dOB.isAfter(LocalDate.of(2024, 12, 31));
+    }
 }
