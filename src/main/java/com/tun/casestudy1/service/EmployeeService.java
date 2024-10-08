@@ -7,6 +7,9 @@ import com.tun.casestudy1.repository.EmployeeRepository;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -30,6 +33,12 @@ public class EmployeeService implements IService<Employee>{
     @Override
     public Employee find(int id) {
         return employeeRepository.findById(id).orElse(null);
+    }
+
+    public Page<Employee> findPaginated(int page, int size)  {
+        Pageable pageable = PageRequest.of(page - 1, size);
+        return employeeRepository.findAll(pageable);
+
     }
 
     @Override
@@ -93,6 +102,7 @@ public class EmployeeService implements IService<Employee>{
         employee1.setPhoneNumber(employee.getPhoneNumber());
         employee1.setSalary(employee.getSalary());
         employee1.setDepartmentId(employee.getDepartmentId());
+        employee1.setDOB(employee.getDOB());
 
         employeeRepository.save(employee1);
     }

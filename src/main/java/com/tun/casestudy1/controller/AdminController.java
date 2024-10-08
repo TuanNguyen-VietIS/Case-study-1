@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -55,23 +56,42 @@ public class AdminController {
     }
 
     @GetMapping("/employee-management")
-    public String getEmployeeManagementPage(Model model)  {
-        List<Employee> employees = employeeService.findAll();
-        model.addAttribute("employees", employees);
+    public String getEmployeeManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model)  {
+        Page<Employee> employeePage = employeeService.findPaginated(page, size);
+        model.addAttribute("employees", employeePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePage.getTotalPages());
+        model.addAttribute("pageSize", size);
+
         return "admin/employee/view-list";
     }
 
     @GetMapping("/department-management")
-    public String getDepartmentManagementPage(Model model) {
-        List<Department> departments = departmentService.findAll();
-        model.addAttribute("departments", departments);
+    public String getDepartmentManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model) {
+        Page<Department> departmentPage = departmentService.findPaginated(page, size);
+        model.addAttribute("departments", departmentPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", departmentPage.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "admin/department/view-list";
     }
 
     @GetMapping("/account-management")
-    public String getAccountManagementPage(Model model) {
-        List<Employee> employees = employeeService.findAll();
-        model.addAttribute("employees", employees);
+    public String getAccountManagementPage(
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "size", defaultValue = "5") int size,
+            Model model) {
+        Page<Employee> employeePage = employeeService.findPaginated(page, size);
+        model.addAttribute("employees", employeePage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeePage.getTotalPages());
+        model.addAttribute("pageSize", size);
         return "admin/account/view-list";
     }
 
