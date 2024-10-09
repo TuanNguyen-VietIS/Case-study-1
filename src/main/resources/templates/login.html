@@ -11,12 +11,6 @@
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <div style="display: flex; flex-direction: column">
-        <a class="nav-link" th:href="@{/login(lang='vi')}">Tiếng Việt</a>
-        <a class="nav-link" th:href="@{/login(lang='en')}">Tiếng Anh</a>
-        <a class="nav-link" th:href="@{/login(lang='jp')}">Tiếng Nhật</a>
-    </div>
-
     <h2 th:text="#{homepage.login}">Vui lòng đăng nhập để sử dụng hệ thống</h2>
 
     <form th:action="@{/login}" method="post">
@@ -34,5 +28,7 @@
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script src="/js/language-selector.js"></script>
 </body>
 </html>

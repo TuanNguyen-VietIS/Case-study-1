@@ -68,7 +68,7 @@
         function changePage(page = 1) {
             const pageSize = document.getElementById('pageSize').value;
 
-            fetch('/admin/department-management?page=' + page + '&size=' + pageSize)
+            fetch(`/admin/department-management?page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.body.innerHTML = html;
@@ -89,6 +89,7 @@
             });
         });
     </script>
+    <script src="/js/language-selector.js"></script>
 
 </body>
 </html>

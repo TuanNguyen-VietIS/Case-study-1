@@ -61,14 +61,14 @@
     <script>
         function deleteAccount(id) {
             if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
-                location.href = '/admin/delete-account/' + id; // Gọi phương thức xóa
+                location.href = '/admin/delete-account/' + id;
             }
         }
 
         function changePage(page = 1) {
             const pageSize = document.getElementById('pageSize').value;
 
-            fetch('/admin/account-management?page=' + page + '&size=' + pageSize)
+            fetch(`/admin/account-management?page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.body.innerHTML = html;
@@ -89,6 +89,6 @@
             });
         });
     </script>
-
+    <script src="/js/language-selector.js"></script>
 </body>
 </html>

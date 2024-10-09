@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Access Denied</title>
+    <title th:text="#{error.access.denied.header}">Access Denied</title>
     <style>
         * {
             margin: 0;
@@ -42,5 +42,7 @@
         <h1 th:text="#{error.access.denied.header}">Access Denied</h1>
         <p th:text="#{error.access.denied.body}">You do not have permission to access this page</p>
     </div>
+
+    <script src="/js/language-selector.js"></script>
 </body>
 </html>

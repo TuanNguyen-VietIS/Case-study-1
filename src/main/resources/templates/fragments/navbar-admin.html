@@ -1,8 +1,4 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-</head>
-<body>
+<body th:fragment="nav">
     <nav class="admin-nav">
         <ul>
             <li><a th:href="@{/admin/adminHome}" th:text="#{header.adminHome}">Trang chủ</a></li>
@@ -20,5 +16,39 @@
             <li><a th:href="@{/admin/logout}" th:text="#{header.logout}">Đăng xuất</a></li>
         </ul>
     </nav>
+    <div style="text-align: right; padding: 1em;">
+        <select id="locales">
+            <option value="" disabled>Select Language</option>
+            <option value="en">English</option>
+            <option value="vi">Vietnamese</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+    <script type="text/javascript">
+        window.onload = function() {
+            const languageDropdown = document.getElementById('locales');
+            const savedLang = localStorage.getItem('language');
+
+            if (savedLang) {
+                setLanguage(savedLang, false);
+            } else {
+                setLanguage('vi', false);
+            }
+
+            languageDropdown.addEventListener('change', (event) => {
+                const selectedLang = event.target.value;
+
+                if (selectedLang) {
+                    localStorage.setItem('language', selectedLang);
+                    setLanguage(selectedLang, true);
+                }
+            });
+        };
+
+        function setLanguage(lang, reload) {
+            if (reload) {
+                window.location.href = window.location.pathname + '?lang=' + lang;
+            }
+        }
+    </script>
 </body>
-</html>
