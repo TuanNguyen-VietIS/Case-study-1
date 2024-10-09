@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Home</title>
+    <title th:text="#{header.adminHome}">User Home</title>
     <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
     <link rel="stylesheet" type="text/css" href="/css/table.css">
     <link rel="stylesheet" type="text/css" href="/css/header.css"/>
@@ -44,6 +44,8 @@
     </table>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script src="/js/language-selector.js"></script>
 
 </body>
 </html>

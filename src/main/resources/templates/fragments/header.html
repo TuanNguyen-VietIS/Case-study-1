@@ -1,9 +1,3 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-</head>
-<body>
 <header>
     <div class="header-left">
         <div class="logo">
@@ -18,10 +12,38 @@
             <li class ="header-list-text" th:text="#{homepage.sub3}">Liên hệ</li>
         </ul>
     </div>
-<!--    <div class="language-selector">-->
-<!--        <a class="nav-link" th:href="@{/login(lang='vi')}">Tiếng Việt</a>-->
-<!--        <a class="nav-link" th:href="@{/login(lang='en')}">English</a>-->
-<!--    </div>-->
+    <div style="text-align: right; padding: 1em;">
+        <select id="locales">
+            <option value="" disabled>Select Language</option>
+            <option value="en">English</option>
+            <option value="vi">Vietnamese</option>
+            <option value="jp">Japanese</option>
+        </select>
+    </div>
+
 </header>
-</body>
-</html>
+<script type="text/javascript">
+    window.onload = function() {
+        const savedLang = localStorage.getItem('language');
+
+        if (savedLang) {
+            setLanguage(savedLang, false);
+        } else {
+            setLanguage('vi', false);
+        }
+
+        document.getElementById('locales').addEventListener('change', function () {
+            const selectedLang = this.value;
+            if (selectedLang) {
+                localStorage.setItem('language', selectedLang);
+                setLanguage(selectedLang, true);
+            }
+        });
+    };
+
+    function setLanguage(lang, reload) {
+        if (reload) {
+            window.location.href = window.location.pathname + '?lang=' + lang;
+        }
+    }
+</script>
