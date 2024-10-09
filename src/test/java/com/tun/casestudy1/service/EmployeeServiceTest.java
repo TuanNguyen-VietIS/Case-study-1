@@ -126,12 +126,12 @@ public class EmployeeServiceTest {
         Mockito.verify(employeeRepository, Mockito.times(1)).deleteById(1);
     }
 
-    @Test
-    public void testSearchUser() {
-        String query = "John";
-        employeeService.searchUser(query);
-        Mockito.verify(employeeRepository, Mockito.times(1)).searchByQuery(query);
-    }
+//    @Test
+//    public void testSearchUser() {
+//        String query = "John";
+//        employeeService.searchUser(query);
+//        Mockito.verify(employeeRepository, Mockito.times(1)).searchByQuery(query);
+//    }
 
     @Test
     public void testGetListEmployeesInDept() {

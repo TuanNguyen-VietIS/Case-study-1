@@ -13,7 +13,7 @@
 <body>
     <div th:replace="~{fragments/header :: header}"></div>
 
-    <a th:href="@{/user/logout}" th:text="#{header.logout}">Đăng xuất</a>
+    <a th:text="#{header.logout}" id="logout-btn">Đăng xuất</a>
     <h1 th:text="#{message.excellent-employee}">10 gương mặt xuất sắc nhất công ty</h1>
 
     <table>
@@ -46,6 +46,15 @@
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script src="/js/language-selector.js"></script>
+    <script>
+        document.getElementById('logout-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            localStorage.removeItem('language');
+
+            window.location.href = '/user/logout';
+        });
+    </script>
 
 </body>
 </html>
