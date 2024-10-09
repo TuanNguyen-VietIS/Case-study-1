@@ -31,7 +31,20 @@
     <div class="title-button">
         <h2 th:text="#{message.employee-management}">Quản lý nhân viên</h2>
         <button th:onclick="|location.href='/admin/add-employee'|" th:text="#{table.button.add}">Thêm</button>
-        <input type="text" id="searchInput" placeholder="Tìm kiếm" oninput="searchEmployees()"/>
+
+        <div>
+            <input type="text" id="searchInput" placeholder="Tìm kiếm" oninput="searchEmployees()"/>
+            <select id="filterType" onchange="searchEmployees()">
+                <option value="all" th:text="#{filter.all}">Tất cả</option>
+                <option value="name" th:text="#{filter.employee-name}">Tên</option>
+                <option value="dateOfBirth" th:text="#{filter.date-of-birth}">Ngày sinh</option>
+                <option value="department" th:text="#{filter.department-name}">Phòng ban</option>
+                <option value="level" th:text="#{filter.level}">Cấp độ</option>
+                <option value="phoneNumber" th:text="#{filter.phone-number}">Số điện thoại</option>
+                <option value="salary" th:text="#{filter.salary}">Lương</option>
+            </select>
+        </div>
+
     </div>
 
     <table>
@@ -83,9 +96,12 @@
             }
         }
 
-        function searchEmployees() {
-            const query = document.getElementById('searchInput').value;
-            fetch('/admin/search?query=' + encodeURIComponent(query))
+        function searchEmployees(page = 1) {
+            const query = document.getElementById('searchInput').value || '';
+            const filterType = document.getElementById('filterType').value || 'all';
+            const pageSize = document.getElementById('pageSize').value || 5;
+
+            fetch(`/admin/search?query=${encodeURIComponent(query)}&filterType=${filterType}&page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('employeeTableBody').innerHTML = html;
@@ -93,28 +109,15 @@
                 .catch(error => console.error('Error fetching data:', error));
         }
 
-        function changePage(page = 1) {
-            const pageSize = document.getElementById('pageSize').value;
-
-            // fetch('/admin/employee-management?page=' + page + '&size=' + pageSize)
-            fetch(`/admin/employee-management?page=${page}&size=${pageSize}`)
-                .then(response => response.text())
-                .then(html => {
-                    document.body.innerHTML = html;
-                })
-
-                .catch(error => console.error('Error fetching data:', error));
-        }
-
         document.getElementById('pageSize').addEventListener('change', function() {
-            changePage(1);
+            searchEmployees(1);
         });
 
         document.querySelectorAll('.pagination-link').forEach(link => {
             link.addEventListener('click', function(event) {
                 event.preventDefault();
                 const page = this.getAttribute('data-page');
-                changePage(page);
+                searchEmployees(1);
             });
         });
     </script>

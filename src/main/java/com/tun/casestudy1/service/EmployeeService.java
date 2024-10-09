@@ -4,12 +4,14 @@ import com.tun.casestudy1.dto.request.UpdateAccountDto;
 import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.repository.EmployeeRepository;
+import com.tun.casestudy1.repository.specifications.EmployeeSpecification;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -107,8 +109,9 @@ public class EmployeeService implements IService<Employee>{
         employeeRepository.save(employee1);
     }
 
-    public List<Employee> searchUser(String query) {
-        return employeeRepository.searchByQuery(query);
+    public Page<Employee> searchEmployees(String searchValue, String filterType, Pageable pageable) {
+        Specification<Employee> spec = EmployeeSpecification.getEmployeeSpecification(searchValue, filterType);
+        return employeeRepository.findAll(spec, pageable);
     }
 
     public List<Employee> getListEmployeesInDept(int id) {

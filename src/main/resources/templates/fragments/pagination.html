@@ -1,7 +1,7 @@
 <div th:fragment="pagination-fragment(baseUrl, pageSize, totalPages, currentPage)">
     <div class="page-size-container">
         <label class="page-size-label" for="pageSize" th:text="#{option.pageSize}">Kích thước trang:</label>
-        <select id="pageSize" class="page-size-select" th:name="pageSize" th:value="${pageSize}" onchange="changePage()">
+        <select id="pageSize" class="page-size-select" th:name="pageSize" th:value="${pageSize}" onchange="searchEmployees()">
             <option value="5" th:selected="${pageSize == 5}">5</option>
             <option value="10" th:selected="${pageSize == 10}">10</option>
             <option value="20" th:selected="${pageSize == 20}">20</option>

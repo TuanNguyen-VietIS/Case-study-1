@@ -13,12 +13,12 @@
                     <a th:href="@{/admin/view-departments-achievements}" th:text="#{header.view-department-achievement}">Xem tổng hợp thành tích của phòng</a>
                 </div>
             </li>
-            <li><a th:href="@{/admin/logout}" th:text="#{header.logout}">Đăng xuất</a></li>
+            <li><a th:text="#{header.logout}" id="logout-btn">Đăng xuất</a></li>
         </ul>
     </nav>
     <div style="text-align: right; padding: 1em;">
         <select id="locales">
-            <option value="" disabled>Select Language</option>
+            <option value="" disabled selected>Select Language</option>
             <option value="en">English</option>
             <option value="vi">Vietnamese</option>
             <option value="jp">Japanese</option>
@@ -50,5 +50,13 @@
                 window.location.href = window.location.pathname + '?lang=' + lang;
             }
         }
+
+        document.getElementById('logout-btn').addEventListener('click', function(event) {
+            event.preventDefault();
+
+            localStorage.removeItem('language');
+
+            window.location.href = '/admin/logout';
+        });
     </script>
 </body>

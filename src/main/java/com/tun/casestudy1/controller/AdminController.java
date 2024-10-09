@@ -20,17 +20,18 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.ArrayList;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 
@@ -280,12 +281,45 @@ public class AdminController {
         return "redirect:/admin/employee-management";
     }
 
-    // Search employee
     @GetMapping("/search")
-    public String searchEmployees(@RequestParam String query, Model model) {
-        List<Employee> employees = employeeService.searchUser(query);
-        model.addAttribute("employees", employees.isEmpty() ? new ArrayList<>() : employees);
-        return "fragments/employee-fragment";
+    public ResponseEntity<String> searchEmployees(
+            @RequestParam(defaultValue = "") String query,
+            @RequestParam(defaultValue = "all") String filterType,
+            @RequestParam(defaultValue = "1") int page,
+            @RequestParam(defaultValue = "5") int size,
+            Model model) {
+
+        Pageable pageable = PageRequest.of(page - 1, size);
+        Page<Employee> employeesPage = employeeService.searchEmployees(query, filterType, pageable);
+
+        model.addAttribute("employees", employeesPage.getContent());
+        model.addAttribute("currentPage", page);
+        model.addAttribute("totalPages", employeesPage.getTotalPages());
+        model.addAttribute("pageSize", size);
+
+        String tableBodyHtml = generateTableBodyHtml(employeesPage.getContent());
+
+        return ResponseEntity.ok(tableBodyHtml);
+    }
+
+    private String generateTableBodyHtml(List<Employee> employees) {
+        DateTimeFormatter   formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        StringBuilder htmlBuilder = new StringBuilder();
+        for (int idx = 0; idx < employees.size(); idx++) {
+            Employee employee = employees.get(idx);
+            htmlBuilder.append("<tr>")
+                .append("<td>").append(idx + 1).append("</td>")
+                .append("<td><img src='/admin/files/").append(employee.getImageUrl()).append("' alt='Ảnh thẻ' style='width: 60px; height: 60px; border-radius: 50%; object-fit: cover;'/></td>")
+                .append("<td>").append(employee.getName()).append("</td>")
+                .append("<td>").append(employee.getDOB().format(formatter)).append("</td>")
+                .append("<td>").append(employee.getDepartment() != null ? employee.getDepartment().getName() : "").append("</td>")
+                .append("<td>").append(employee.getLevel()).append("</td>")
+                .append("<td>").append(employee.getPhoneNumber()).append("</td>")
+                .append("<td>").append(employee.getSalary()).append("</td>")
+                .append("<td><button onclick='location.href=\"/admin/edit-employee/").append(employee.getId()).append("\"'>Sửa</button> <button onclick='deleteEmployee(").append(employee.getId()).append(")'>Xóa</button></td>")
+                .append("</tr>");
+        }
+        return htmlBuilder.toString();
     }
 
     @GetMapping("/files/{filename}")
