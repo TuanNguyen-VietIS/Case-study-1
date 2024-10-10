@@ -3,6 +3,7 @@ package com.tun.casestudy1.service;
 import com.tun.casestudy1.dto.response.DepartmentAchievementDto;
 import com.tun.casestudy1.dto.response.EmployeeAchievementDto;
 import com.tun.casestudy1.dto.response.ExcellentEmployeeDto;
+import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.entity.EmployeeRecord;
 import com.tun.casestudy1.repository.EmployeeRecordRepository;
 import org.junit.jupiter.api.Test;
@@ -84,5 +85,27 @@ public class EmployeeRecordServiceTest {
         assertEquals("imageUrl", result.get(0).getImageUrl());
         assertEquals("IDT", result.get(0).getNameOfDept());
         assertEquals(15, result.get(0).getTotalAchievements());
+    }
+
+    @Test
+    void testSaveEmployeeRecord() {
+        Employee employee = new Employee();
+        employee.setId(2);
+
+        EmployeeRecord employeeRecord = new EmployeeRecord();
+        employeeRecord.setEmployee(employee);
+
+        employeeRecordService.save(employeeRecord);
+
+        Mockito.verify(employeeRecordRepository, Mockito.times(1)).save(employeeRecord);
+    }
+
+    @Test
+    public void testDeleteEmployeeRecord() {
+        int idToDelete = 1;
+
+        employeeRecordService.delete(idToDelete);
+
+        Mockito.verify(employeeRecordRepository).deleteById(idToDelete);
     }
 }
