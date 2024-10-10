@@ -1,34 +1,33 @@
 package com.tun.casestudy1.service;
 
+import com.tun.casestudy1.dto.request.UpdateAccountDto;
 import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.enums.Role;
 import com.tun.casestudy1.repository.EmployeeRepository;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 
 @ExtendWith(MockitoExtension.class)
 public class EmployeeServiceTest {
@@ -121,17 +120,50 @@ public class EmployeeServiceTest {
     }
 
     @Test
+    public void testUpdateAccountEmailExistsDifferentId() {
+        Employee existingEmployee = new Employee();
+        existingEmployee.setEmail("tuan@gmail.com");
+
+        UpdateAccountDto updateAccountDto = new UpdateAccountDto();
+        updateAccountDto.setEmail("tuan@gmail.com");
+        updateAccountDto.setName("Van Tuan");
+        updateAccountDto.setPassword("12345");
+
+        Mockito.when(employeeRepository.findById(2)).thenReturn(Optional.of(existingEmployee));
+        Mockito.when(employeeRepository.findByEmail(updateAccountDto.getEmail())).thenReturn(Optional.of(existingEmployee));
+
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+            employeeService.updateAccount(2, updateAccountDto);
+        });
+
+        assertEquals("Email already exists", thrown.getMessage());
+    }
+
+    @Test
     public void testDeleteEmployee() {
         employeeService.delete(1);
         Mockito.verify(employeeRepository, Mockito.times(1)).deleteById(1);
     }
 
-//    @Test
-//    public void testSearchUser() {
-//        String query = "John";
-//        employeeService.searchUser(query);
-//        Mockito.verify(employeeRepository, Mockito.times(1)).searchByQuery(query);
-//    }
+    @Test
+    public void testSearchEmployees_withNameFilterType() {
+        String searchValue = "Nguyen Van Tuan";
+        String filterType = "name";
+
+        Pageable pageable = PageRequest.of(0, 10);
+
+        List<Employee> employees = Collections.singletonList(new Employee());
+        Page<Employee> employeePage = new PageImpl<>(employees);
+
+        // any: Any specification is fine
+        // eq: When using argument matcher for many arguments
+        Mockito.when(employeeRepository.findAll(any(Specification.class), eq(pageable))).thenReturn(employeePage);
+
+        Page<Employee> result = employeeService.searchEmployees(searchValue, filterType, pageable);
+
+        assertEquals(1, result.getTotalElements());
+        Mockito.verify(employeeRepository, Mockito.times(1)).findAll(any(Specification.class), eq(pageable));
+    }
 
     @Test
     public void testGetListEmployeesInDept() {
@@ -155,5 +187,19 @@ public class EmployeeServiceTest {
         assertEquals(2, result.size());
         assertEquals("Tuan Nguyen", result.get(0).getName());
         assertEquals("Mi xoan", result.get(1).getName());
+    }
+
+    @Test
+    public void testSaveEmailExists() {
+        Employee employee = new Employee();
+        employee.setEmail("tuan@gmail.com");
+
+        Mockito.when(employeeRepository.findByEmail(employee.getEmail())).thenReturn(Optional.of(employee));
+
+        RuntimeException thrown = assertThrows(RuntimeException.class, () -> {
+            employeeService.save(employee);
+        });
+
+        assertEquals("Existed", thrown.getMessage());
     }
 }
