@@ -19,6 +19,7 @@ public class CaseStudy1Application implements CommandLineRunner {
     @Override
     public void run(String... arg) throws Exception {
         storageService.init();
+        // 2
     }
 
 }
