@@ -1,8 +1,8 @@
 package com.tun.casestudy1.controller;
 
-import com.tun.casestudy1.dto.response.ExcellentEmployeeDto;
-import com.tun.casestudy1.service.EmployeeRecordService;
-import com.tun.casestudy1.service.FileStorageService;
+import com.tun.casestudy1.dto.response.ExcellentEmployeeResponse;
+import com.tun.casestudy1.service.impl.EmployeeRecordServiceImpl;
+import com.tun.casestudy1.service.impl.FileStorageServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -25,13 +25,13 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class UserController {
 
-    EmployeeRecordService employeeRecordService;
-    FileStorageService fileStorageService;
+    EmployeeRecordServiceImpl employeeRecordServiceImpl;
+    FileStorageServiceImpl fileStorageServiceImpl;
 
     @GetMapping("/userHome")
     public String userHomePage(Model model) {
-        List<ExcellentEmployeeDto> excellentEmployeeDtos = employeeRecordService.findExcellentEmployees();
-        model.addAttribute("excellentEmployees", excellentEmployeeDtos);
+        List<ExcellentEmployeeResponse> excellentEmployeeResponses = employeeRecordServiceImpl.findExcellentEmployees();
+        model.addAttribute("excellentEmployees", excellentEmployeeResponses);
         return "user/userHome";
     }
 
@@ -43,7 +43,7 @@ public class UserController {
 
     @GetMapping("/files/{filename}")
     public ResponseEntity<Resource> getFile(@PathVariable String filename) throws MalformedURLException {
-        Resource file = fileStorageService.load(filename);
+        Resource file = fileStorageServiceImpl.load(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" +"anh" + "\"")
                 .body(file);

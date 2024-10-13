@@ -1,121 +1,37 @@
 package com.tun.casestudy1.service;
 
-import com.tun.casestudy1.dto.request.UpdateAccountDto;
-import com.tun.casestudy1.dto.request.UpdateEmployeeDto;
-import com.tun.casestudy1.entity.Employee;
-import com.tun.casestudy1.repository.EmployeeRepository;
-import com.tun.casestudy1.repository.specifications.EmployeeSpecification;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import com.tun.casestudy1.dto.request.CreateEmployeeRequest;
+import com.tun.casestudy1.dto.request.UpdateAccountRequest;
+import com.tun.casestudy1.dto.request.UpdateEmployeeRequest;
+import com.tun.casestudy1.dto.response.AccountResponse;
+import com.tun.casestudy1.dto.response.EmployeeResponse;
+import com.tun.casestudy1.dto.response.PaginatedResponse;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
-@Service
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class EmployeeService implements IService<Employee>{
+public interface EmployeeService {
+    List<EmployeeResponse> findAll();
 
-    EmployeeRepository employeeRepository;
-    FileStorageService fileStorageService;
+    EmployeeResponse find(int id);
 
-    @Override
-    public List<Employee> findAll() {
-        return employeeRepository.findAll();
-    }
+    AccountResponse findAccount(int id);
 
-    @Override
-    public Employee find(int id) {
-        return employeeRepository.findById(id).orElse(null);
-    }
+    void delete(int id);
 
-    public Page<Employee> findPaginated(int page, int size)  {
-        Pageable pageable = PageRequest.of(page - 1, size);
-        return employeeRepository.findAll(pageable);
+    void save(CreateEmployeeRequest dto);
 
-    }
+    PaginatedResponse<EmployeeResponse> findEmployeePaginated(int page, int size);
 
-    @Override
-    public void delete(int id) {
-        employeeRepository.deleteById(id);
-    }
+    PaginatedResponse<AccountResponse> findAccountPaginated(int page, int size);
 
-    @Override
-    public void save(Employee employee) {
-        boolean emailExists = employeeRepository.findByEmail(employee.getEmail()).isPresent();
-        if (emailExists) {
-            throw new RuntimeException("Existed");
-        }
+    void updateAccount(int id, UpdateAccountRequest employee);
 
-        Employee employee2 = Employee.builder()
-                .name(employee.getName())
-                .email(employee.getEmail())
-                .password(employee.getPassword())
-                .gender(employee.getGender())
-                .salary(employee.getSalary())
-                .level(employee.getLevel())
-                .phoneNumber(employee.getPhoneNumber())
-                .note(employee.getNote())
-                .imageUrl(employee.getImageUrl())
-                .dOB(employee.getDOB())
-                .departmentId(employee.getDepartmentId())
-                .build();
-        employeeRepository.save(employee2);
-    }
+    void updateEmployee(int id, UpdateEmployeeRequest employee, MultipartFile imageFile) throws IOException;
 
-    public void updateAccount(int id, UpdateAccountDto employee) {
-        Employee employee1 = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not Found"));
+    PaginatedResponse<EmployeeResponse> searchEmployees(String searchValue, String filterType, Pageable pageable);
 
-        Optional<Employee> existingEmployee = employeeRepository.findByEmail(employee.getEmail());
-        if (existingEmployee.isPresent() && existingEmployee.get().getId() != id) {
-            throw new RuntimeException("Email already exists");
-        }
-
-        employee1.setName(employee.getName());
-        employee1.setEmail(employee.getEmail());
-        employee1.setPassword(employee.getPassword());
-
-        employeeRepository.save(employee1);
-    }
-
-    public void updateEmployee(int id, UpdateEmployeeDto employee, MultipartFile imageFile) throws IOException {
-        Employee employee1 = employeeRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Not Found"));
-
-        if (imageFile == null || imageFile.isEmpty() || imageFile.getOriginalFilename().isEmpty()) {
-            employee1.setImageUrl(employee1.getImageUrl());
-        }
-        else{
-            String fileName = fileStorageService.save(imageFile);
-            employee1.setImageUrl(fileName);
-        }
-
-        employee1.setName(employee.getName());
-        employee1.setLevel(employee.getLevel());
-        employee1.setPhoneNumber(employee.getPhoneNumber());
-        employee1.setSalary(employee.getSalary());
-        employee1.setDepartmentId(employee.getDepartmentId());
-        employee1.setDOB(employee.getDOB());
-
-        employeeRepository.save(employee1);
-    }
-
-    public Page<Employee> searchEmployees(String searchValue, String filterType, Pageable pageable) {
-        Specification<Employee> spec = EmployeeSpecification.getEmployeeSpecification(searchValue, filterType);
-        return employeeRepository.findAll(spec, pageable);
-    }
-
-    public List<Employee> getListEmployeesInDept(int id) {
-        return employeeRepository.findAllByDepartmentId(id);
-    }
-
+    List<EmployeeResponse> getListEmployeesInDept(int id);
 }

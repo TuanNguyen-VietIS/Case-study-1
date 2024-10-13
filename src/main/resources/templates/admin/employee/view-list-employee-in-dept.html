@@ -21,7 +21,7 @@
 
     <h2 th:text="#{message.view-employee-department}">Danh sách nhân viên trong phòng ban</h2>
 
-    <a href="/admin/department-management" th:text="#{table.edit.cancel}" class="center-link">Hủy</a>
+    <a href="/admin/departments/department-management" th:text="#{table.edit.cancel}" class="center-link">Hủy</a>
 
     <table>
         <thead>
@@ -34,7 +34,6 @@
             <th th:text="#{table.level}">Cấp độ</th>
             <th th:text="#{table.phone-number}">Số điện thoại</th>
             <th th:text="#{table.salary}">Lương</th>
-            <th th:text="#{table.action}">Hành động</th>
         </tr>
         </thead>
         <tbody>
@@ -48,8 +47,8 @@
                 <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
             </td>
             <td th:text="${employee.name}"></td>
-            <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
-            <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
+            <td th:text="${#temporals.format(employee.dateOfBirth, 'dd/MM/yyyy')}"></td>
+            <td th:text="${employee.departmentName}"></td>
             <td th:text="${employee.level}"></td>
             <td th:text="${employee.phoneNumber}"></td>
             <td th:text="${employee.salary}"></td>

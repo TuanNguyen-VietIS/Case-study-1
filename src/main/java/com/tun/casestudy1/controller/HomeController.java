@@ -1,6 +1,6 @@
 package com.tun.casestudy1.controller;
 
-import com.tun.casestudy1.service.AuthService;
+import com.tun.casestudy1.service.impl.AuthServiceImpl;
 import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.Locale;
 @FieldDefaults(level = AccessLevel.PRIVATE,makeFinal = true)
 public class HomeController {
 
-    AuthService authService;
+    AuthServiceImpl authServiceImpl;
     MessageSource messageSource;
 
     @GetMapping({"/", "/login"})
@@ -28,10 +28,10 @@ public class HomeController {
 
     @PostMapping("/login")
     public String login(String username, String password, HttpSession session, Model model, Locale locale) {
-        String viewName = authService.authenticate(username, password);
+        String viewName = authServiceImpl.authenticate(username, password);
 
         if (viewName != null) {
-            String role = authService.getRoleByUsername(username);
+            String role = authServiceImpl.getRoleByUsername(username);
             if (role != null) {
                 session.setAttribute("userRole", role);
             }

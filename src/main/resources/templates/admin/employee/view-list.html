@@ -30,7 +30,7 @@
 
     <div class="title-button">
         <h2 th:text="#{message.employee-management}">Quản lý nhân viên</h2>
-        <button th:onclick="|location.href='/admin/add-employee'|" th:text="#{table.button.add}">Thêm</button>
+        <button th:onclick="|location.href='/admin/employees/add-employee'|" th:text="#{table.button.add}">Thêm</button>
 
         <div>
             <input type="text" id="searchInput" placeholder="Tìm kiếm" oninput="searchEmployees()"/>
@@ -72,27 +72,27 @@
                     <p th:if="${employee.imageUrl == null}">Không có ảnh</p>
                 </td>
                 <td th:text="${employee.name}"></td>
-                <td th:text="${#temporals.format(employee.dOB, 'dd/MM/yyyy')}"></td>
-                <td th:text="${employee.departmentId != null ? employee.department.name : ''}"></td>
+                <td th:text="${#temporals.format(employee.dateOfBirth, 'dd/MM/yyyy')}"></td>
+                <td th:text="${employee.departmentId != null ? employee.departmentName : ''}"></td>
                 <td th:text="${employee.level}"></td>
                 <td th:text="${employee.phoneNumber}"></td>
                 <td th:text="${employee.salary}"></td>
                 <td th:if="${employee.role.name() == 'USER'}">
-                    <button th:onclick="|location.href='/admin/edit-employee/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
+                    <button th:onclick="|location.href='/admin/employees/edit-employee/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
                     <button th:onclick="'deleteEmployee(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/employee-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
+    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/employees/employee-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
         function deleteEmployee(id) {
             if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
-                location.href = '/admin/delete-employee/' + id;
+                location.href = '/admin/employees/delete-employee/' + id;
             }
         }
 
@@ -101,7 +101,7 @@
             const filterType = document.getElementById('filterType').value || 'all';
             const pageSize = document.getElementById('pageSize').value || 5;
 
-            fetch(`/admin/search?query=${encodeURIComponent(query)}&filterType=${filterType}&page=${page}&size=${pageSize}`)
+            fetch(`/admin/employees/search?query=${encodeURIComponent(query)}&filterType=${filterType}&page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.getElementById('employeeTableBody').innerHTML = html;
@@ -117,7 +117,7 @@
             link.addEventListener('click', function(event) {
                 event.preventDefault();
                 const page = this.getAttribute('data-page');
-                searchEmployees(1);
+                searchEmployees(page);
             });
         });
     </script>

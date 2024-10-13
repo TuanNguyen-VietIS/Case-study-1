@@ -1,4 +1,5 @@
 package com.tun.casestudy1.service;
+import com.tun.casestudy1.service.impl.FileStorageServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,16 +18,16 @@ import java.util.UUID;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class FileStorageServiceTest {
+public class FileStorageServiceImplTest {
     @Mock
     MultipartFile multipartFile;
     @Mock
-    FileStorageService fileStorageService;
+    FileStorageServiceImpl fileStorageServiceImpl;
     private final Path root = Paths.get("./uploads");
 
     @BeforeEach
     void setUp() {
-        fileStorageService.init();
+        fileStorageServiceImpl.init();
     }
 
     @Test
@@ -37,9 +38,9 @@ public class FileStorageServiceTest {
 
         Mockito.when(mockResource.exists()).thenReturn(true);
         Mockito.when(mockResource.isReadable()).thenReturn(true);
-        Mockito.when(fileStorageService.load(filename)).thenReturn(mockResource);
+        Mockito.when(fileStorageServiceImpl.load(filename)).thenReturn(mockResource);
 
-        Resource result = fileStorageService.load(filename);
+        Resource result = fileStorageServiceImpl.load(filename);
 
         assertNotNull(result);
         assertTrue(result.exists());
@@ -54,7 +55,7 @@ public class FileStorageServiceTest {
         Mockito.when(multipartFile.getOriginalFilename()).thenReturn(originalFilename);
         Mockito.when(multipartFile.getInputStream()).thenReturn(this.getClass().getResourceAsStream("/testfile.txt"));
 
-        String resultFilename = fileStorageService.save(multipartFile);
+        String resultFilename = fileStorageServiceImpl.save(multipartFile);
 
         assertEquals(generatedFilename, resultFilename);
         assertTrue(Files.exists(destinationPath));

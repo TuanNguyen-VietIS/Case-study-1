@@ -41,34 +41,34 @@
         </tr>
         </thead>
         <tbody>
-        <tr th:each="employee,idx : ${employees}">
+        <tr th:each="account,idx : ${accounts}">
             <td th:text="${idx.count}"></td>
-            <td th:text="${employee.name}"></td>
-            <td th:text="${employee.email}"></td>
-            <td th:text="${employee.password}"></td>
-            <td th:if="${employee.role.name() == 'USER'}">
-                <button th:onclick="|location.href='/admin/edit-account/' + ${employee.id}|" th:text="#{table.button.update}">Sửa</button>
-                <button th:onclick="'deleteAccount(' + ${employee.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
+            <td th:text="${account.name}"></td>
+            <td th:text="${account.email}"></td>
+            <td th:text="${account.password}"></td>
+            <td th:if="${account.role.name() == 'USER'}">
+                <button th:onclick="|location.href='/admin/accounts/edit-account/' + ${account.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="'deleteAccount(' + ${account.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/account-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
+    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/accounts/account-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
         function deleteAccount(id) {
             if (confirm('Bạn có chắc chắn muốn xóa nhân viên này không?')) {
-                location.href = '/admin/delete-account/' + id;
+                location.href = '/admin/accounts/delete-account/' + id;
             }
         }
 
         function changePage(page = 1) {
             const pageSize = document.getElementById('pageSize').value;
 
-            fetch(`/admin/account-management?page=${page}&size=${pageSize}`)
+            fetch(`/admin/accounts/account-management?page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.body.innerHTML = html;

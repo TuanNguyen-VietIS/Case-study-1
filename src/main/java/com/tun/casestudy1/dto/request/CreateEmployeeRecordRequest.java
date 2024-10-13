@@ -1,21 +1,21 @@
 package com.tun.casestudy1.dto.request;
 
-import jakarta.validation.constraints.Email;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
+import java.time.LocalDate;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateAccountDto {
+public class CreateEmployeeRecordRequest {
+    int type;
 
-    String name;
+    String reason;
 
-    @Email(message = "error.email")
-    String email;
+    LocalDate date;
 
-    String password;
+    int employeeId;
 }
