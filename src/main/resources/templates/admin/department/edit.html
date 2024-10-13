@@ -16,13 +16,13 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <form th:object="${department}" class="edit-form" action="/admin/edit-department" method="post">
+    <form th:object="${department}" class="edit-form" action="/admin/departments/edit-department" method="post">
         <input type="hidden" th:field="*{id}"/>
         <label th:text="#{table.department-name}">Tên phòng ban:</label>
         <input type="text" th:field="*{name}" required/>
 
         <button type="submit" th:text="#{table.button.save}">Lưu</button>
-        <a href="/admin/department-management" th:text="#{table.edit.cancel}">Hủy</a>
+        <a href="/admin/departments/department-management" th:text="#{table.edit.cancel}">Hủy</a>
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

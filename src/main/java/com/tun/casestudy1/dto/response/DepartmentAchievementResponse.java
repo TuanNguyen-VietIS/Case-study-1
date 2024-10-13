@@ -3,16 +3,15 @@ package com.tun.casestudy1.dto.response;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Builder
-public class ExcellentEmployeeDto {
-    int employeeId;
+public class DepartmentAchievementResponse {
+    int departmentId;
     String name;
-    String imageUrl;
-    String nameOfDept;
-    int totalAchievements;
+    Long totalAchievements;
+    Long totalDisciplinary;
+    Long rewardPoints;
 }

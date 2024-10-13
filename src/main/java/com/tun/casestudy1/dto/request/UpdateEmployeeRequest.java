@@ -1,23 +1,18 @@
 package com.tun.casestudy1.dto.request;
 
-import com.tun.casestudy1.entity.Department;
-import com.tun.casestudy1.entity.EmployeeRecord;
-import com.tun.casestudy1.enums.Role;
-import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class UpdateEmployeeDto {
+public class UpdateEmployeeRequest {
     String name;
 
     @Min(value = 0, message = "error.salary")

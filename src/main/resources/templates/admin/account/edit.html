@@ -16,7 +16,7 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <form th:object="${employee}" class="edit-form" action="/admin/edit-account" method="post">
+    <form th:object="${employee}" class="edit-form" action="/admin/accounts/edit-account" method="post">
         <input type="hidden" th:field="*{id}"/>
 
         <label th:text="#{table.account-name}">Tên:</label>
@@ -30,7 +30,7 @@
         <input type="text" th:field="*{password}" required/>
 
         <button type="submit" th:text="#{table.button.save}">Lưu</button>
-        <a href="/admin/account-management" th:text="#{table.edit.cancel}">Hủy</a>
+        <a href="/admin/accounts/account-management" th:text="#{table.edit.cancel}">Hủy</a>
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

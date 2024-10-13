@@ -30,7 +30,7 @@
 
     <div class="title-button">
         <h2 th:text="#{message.department-management}">Quản lý phòng ban</h2>
-        <button th:onclick="|location.href='/admin/add-department'|" th:text="#{table.button.add}">Thêm</button>
+        <button th:onclick="|location.href='/admin/departments/add-department'|" th:text="#{table.button.add}">Thêm</button>
     </div>
 
     <table>
@@ -46,29 +46,29 @@
             <td th:text="${idx.count}"></td>
             <td th:text="${department.name}"></td>
             <td>
-                <button th:onclick="|location.href='/admin/view-list-employees-in-dept/' + ${department.id}|" th:text="#{table.button.view}">Xem</button>
-                <button th:onclick="|location.href='/admin/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
+                <button th:onclick="|location.href='/admin/departments/view-list-employees-in-dept/' + ${department.id}|" th:text="#{table.button.view}">Xem</button>
+                <button th:onclick="|location.href='/admin/departments/edit-department/' + ${department.id}|" th:text="#{table.button.update}">Sửa</button>
                 <button th:onclick="'deleteDepartment(' + ${department.id} + ')'" th:text="#{table.button.delete}">Xóa</button>
             </td>
         </tr>
         </tbody>
     </table>
 
-    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/department-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
+    <div th:replace="~{fragments/pagination :: pagination-fragment('/admin/departments/department-management', ${pageSize}, ${totalPages}, ${currentPage})}"></div>
 
     <div th:replace="~{fragments/footer :: footer}"></div>
 
     <script>
         function deleteDepartment(id) {
             if (confirm('Bạn có chắc chắn muốn xóa phòng ban này không?')) {
-                location.href = '/admin/delete-department/' + id;
+                location.href = '/admin/departments/delete-department/' + id;
             }
         }
 
         function changePage(page = 1) {
             const pageSize = document.getElementById('pageSize').value;
 
-            fetch(`/admin/department-management?page=${page}&size=${pageSize}`)
+            fetch(`/admin/departments/department-management?page=${page}&size=${pageSize}`)
                 .then(response => response.text())
                 .then(html => {
                     document.body.innerHTML = html;

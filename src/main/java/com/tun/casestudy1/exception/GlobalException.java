@@ -23,4 +23,13 @@ public class GlobalException {
 
         return "fail";
     }
+
+    @ExceptionHandler(AppException.class)
+    public String handleAppException(AppException ex, Model model, Locale locale) {
+        ErrorCode errorCode = ex.getErrorCode();
+        String localizedErrorMessage = messageSource.getMessage(errorCode.getMessage(), null, locale);
+        model.addAttribute("error", localizedErrorMessage);
+
+        return "fail";
+    }
 }

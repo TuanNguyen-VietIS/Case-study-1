@@ -24,7 +24,7 @@
 
     <h2 th:text="#{message.employee-edit}">Sửa thông tin nhân viên</h2>
 
-    <form th:object="${employee}" class="edit-form" action="/admin/edit-employee" method="post" enctype="multipart/form-data">
+    <form th:object="${employee}" class="edit-form" action="/admin/employees/edit-employee" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}"/>
 
         <label th:text="#{table.employee-name}">Tên:</label>
@@ -52,13 +52,13 @@
         <input type="text" th:field="*{phoneNumber}" required/>
 
         <label th:text="#{table.date-of-birth}">Ngày sinh:</label>
-        <input type="date" th:name="dOB" th:value="*{dOB}">
+        <input type="date" th:name="dOB" th:value="*{dateOfBirth}">
 
         <label th:text="#{table.salary}">Lương:</label>
         <input type="text" th:field="*{salary}" required/>
 
         <button type="submit" th:text="#{table.button.save}">Lưu</button>
-        <a href="/admin/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
+        <a href="/admin/employees/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

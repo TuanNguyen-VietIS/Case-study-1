@@ -12,13 +12,13 @@
 
     <h2 th:text="#{message.add-achievement}">Ghi nhận thành tích/kỷ luật cho nhân viên</h2>
 
-    <form class="edit-form" action="/admin/add-achievement" method="post">
+    <form class="edit-form" action="/admin/achievements/add-achievement" method="post">
         <label th:text="#{table.employee-name}">Nhân viên:</label>
         <select th:name="employeeId" required>
             <option th:each="employee : ${employees}"
                     th:value="${employee.id}"
                     th:text="${employee.id} + ' - ' + ${employee.name} +
-                        (${employee.department != null} ? ' - ' + ${employee.department.name} : '')">
+                        (${employee.departmentId != null} ? ' - ' + ${employee.departmentName} : '')">
         </select>
 
         <label for="type_achivement" th:text="#{table.type}">Loại:</label>
@@ -34,7 +34,7 @@
         <input type="date" id="dateOfRecognition" th:name="date" required />
 
         <button type="submit" th:text="#{table.button.add}">Tạo</button>
-        <a href="/admin/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
+        <a href="/admin/employees/employee-management" th:text="#{table.edit.cancel}">Hủy</a>
     </form>
 
     <div th:replace="~{fragments/footer :: footer}"></div>

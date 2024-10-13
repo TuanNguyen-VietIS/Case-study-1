@@ -1,82 +1,25 @@
 package com.tun.casestudy1.service;
 
-import com.tun.casestudy1.dto.response.DepartmentAchievementDto;
-import com.tun.casestudy1.dto.response.EmployeeAchievementDto;
-import com.tun.casestudy1.dto.response.ExcellentEmployeeDto;
-import com.tun.casestudy1.entity.EmployeeRecord;
-import com.tun.casestudy1.repository.EmployeeRecordRepository;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import org.springframework.stereotype.Service;
+import com.tun.casestudy1.dto.request.CreateEmployeeRecordRequest;
+import com.tun.casestudy1.dto.response.DepartmentAchievementResponse;
+import com.tun.casestudy1.dto.response.EmployeeAchievementResponse;
+import com.tun.casestudy1.dto.response.EmployeeRecordResponse;
+import com.tun.casestudy1.dto.response.ExcellentEmployeeResponse;
 
-import java.math.BigDecimal;
 import java.util.List;
-import java.util.stream.Collectors;
 
-@Service
-@RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
-public class EmployeeRecordService implements IService<EmployeeRecord>{
+public interface EmployeeRecordService {
+    List<EmployeeRecordResponse> findAll();
 
-    EmployeeRecordRepository employeeRecordRepository;
+    EmployeeRecordResponse find(int id);
 
-    @Override
-    public List<EmployeeRecord> findAll() {
-        return employeeRecordRepository.findAll();
-    }
+    void delete(int id);
 
-    @Override
-    public EmployeeRecord find(int id) {
-        return employeeRecordRepository.findById(id).orElse(null);
-    }
+    void save(CreateEmployeeRecordRequest dto);
 
-    @Override
-    public void delete(int id) {
-        employeeRecordRepository.deleteById(id);
-    }
+    List<EmployeeAchievementResponse> findAndCountByEmployeeId();
 
-    @Override
-    public void save(EmployeeRecord employeeRecord) {
-        employeeRecordRepository.save(employeeRecord);
-    }
+    List<DepartmentAchievementResponse> findAndCountByDepartmentId();
 
-
-    public List<EmployeeAchievementDto> findAndCountByEmployeeId() {
-        List<Object[]> list = employeeRecordRepository.getEmployeeAchievementSummary();
-
-        return list.stream()
-                .map(result -> new EmployeeAchievementDto(
-                        (int) result[0],
-                        (String) result[1],
-                        ((BigDecimal) result[2]).intValue(),
-                        ((BigDecimal) result[3]).intValue(),
-                        ((BigDecimal) result[4]).intValue()))
-                .collect(Collectors.toList());
-    }
-
-    public List<DepartmentAchievementDto> findAndCountByDepartmentId() {
-        List<Object[]> list = employeeRecordRepository.getDepartmentAchievementSummary();
-
-        return list.stream()
-                .map(result -> new DepartmentAchievementDto(
-                        (int) result[0],
-                        (String) result[1],
-                        ((BigDecimal) result[2]).intValue(),
-                        ((BigDecimal) result[3]).intValue(),
-                        ((BigDecimal) result[4]).intValue()))
-                .collect(Collectors.toList());
-    }
-
-    public List<ExcellentEmployeeDto> findExcellentEmployees() {
-        List<Object[]> list = employeeRecordRepository.getExcellentEmployees();
-        return list.stream()
-                .map(result -> new ExcellentEmployeeDto(
-                        (int) result[0],
-                        (String) result[1],
-                        (String) result[2],
-                        (String) result[3],
-                        ((BigDecimal) result[4]).intValue()))
-                .collect(Collectors.toList());
-    }
+    List<ExcellentEmployeeResponse> findExcellentEmployees();
 }

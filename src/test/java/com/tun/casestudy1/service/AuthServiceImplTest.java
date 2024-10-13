@@ -3,6 +3,7 @@ package com.tun.casestudy1.service;
 import com.tun.casestudy1.entity.Employee;
 import com.tun.casestudy1.enums.Role;
 import com.tun.casestudy1.repository.EmployeeRepository;
+import com.tun.casestudy1.service.impl.AuthServiceImpl;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -17,13 +18,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
-public class AuthServiceTest {
+public class AuthServiceImplTest {
 
     @Mock
     EmployeeRepository employeeRepository;
 
     @InjectMocks
-    AuthService authService;
+    AuthServiceImpl authServiceImpl;
 
     @Test
     public void testAdminAuthenticationSuccess() {
@@ -34,7 +35,7 @@ public class AuthServiceTest {
 
         Mockito.when(employeeRepository.findByEmail("admin@gmail.com")).thenReturn(Optional.of(employee));
 
-        String result = authService.authenticate("admin@gmail.com", "12345");
+        String result = authServiceImpl.authenticate("admin@gmail.com", "12345");
 
         assertEquals("redirect:/admin/adminHome", result);
     }
@@ -48,7 +49,7 @@ public class AuthServiceTest {
 
         Mockito.when(employeeRepository.findByEmail("h@gmail.com")).thenReturn(Optional.of(employee));
 
-        String result = authService.authenticate("h@gmail.com", "333");
+        String result = authServiceImpl.authenticate("h@gmail.com", "333");
 
         assertEquals("redirect:/user/userHome", result);
     }
@@ -57,7 +58,7 @@ public class AuthServiceTest {
     public void testAuthenticationFail() {
         Mockito.when(employeeRepository.findByEmail("test@gmail.com")).thenReturn(Optional.empty());
 
-        String result = authService.authenticate("test@gmail.com", "111");
+        String result = authServiceImpl.authenticate("test@gmail.com", "111");
 
         assertNull(result);
     }
@@ -71,7 +72,7 @@ public class AuthServiceTest {
 
         Mockito.when(employeeRepository.findByEmail("h@gmail.com")).thenReturn(Optional.of(employee));
 
-        String result = authService.authenticate("h@gmail.com", "111");
+        String result = authServiceImpl.authenticate("h@gmail.com", "111");
 
         assertNull(result);
     }
@@ -82,7 +83,14 @@ public class AuthServiceTest {
         employee.setEmail("test@gmail.com");
         employee.setRole(Role.ADMIN);
         Mockito.when(employeeRepository.findByEmail("test@gmail.com")).thenReturn(Optional.of(employee));
-        String role = authService.getRoleByUsername("test@gmail.com");
+        String role = authServiceImpl.getRoleByUsername("test@gmail.com");
         assertEquals("ADMIN", role);
+    }
+
+    @Test
+    public void testGetRoleByUsername_NotFound() {
+        Mockito.when(employeeRepository.findByEmail("notfound@gmail.com")).thenReturn(Optional.empty());
+        String role = authServiceImpl.getRoleByUsername("notfound@gmail.com");
+        assertNull(role);
     }
 }
