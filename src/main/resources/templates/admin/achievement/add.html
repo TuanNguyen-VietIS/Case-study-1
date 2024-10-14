@@ -13,8 +13,8 @@
     <h2 th:text="#{message.add-achievement}">Ghi nhận thành tích/kỷ luật cho nhân viên</h2>
 
     <form class="edit-form" action="/admin/achievements/add-achievement" method="post">
-        <label th:text="#{table.employee-name}">Nhân viên:</label>
-        <select th:name="employeeId" required>
+        <label for="employees" th:text="#{table.employee-name}">Nhân viên:</label>
+        <select id="employees" th:name="employeeId" required>
             <option th:each="employee : ${employees}"
                     th:value="${employee.id}"
                     th:text="${employee.id} + ' - ' + ${employee.name} +
@@ -27,8 +27,8 @@
             <option value="0" th:text="#{table.discip}">Kỷ luật</option>
         </select>
 
-        <label th:text="#{table.reason}">Lý do:</label>
-        <input type="text" th:name="reason" required/>
+        <label for="reason" th:text="#{table.reason}">Lý do:</label>
+        <input type="text" id="reason" th:name="reason" required/>
 
         <label for="dateOfRecognition" th:text="#{table.daterecog}">Ngày ghi nhận:</label>
         <input type="date" id="dateOfRecognition" th:name="date" required />

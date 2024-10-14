@@ -8,12 +8,9 @@ import jakarta.servlet.http.HttpSession;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Locale;
 
 @Controller
 @RequestMapping("/admin/departments")
@@ -23,17 +20,16 @@ public class DepartmentController {
 
     EmployeeService employeeServiceImpl;
     DepartmentService departmentServiceImpl;
-    MessageSource messageSource;
 
     @GetMapping("/department-management")
     public String getDepartmentManagementPage(
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "size", defaultValue = "5") int size,
             Model model) {
-        PaginatedResponse<DepartmentResponse> departmentRespones = departmentServiceImpl.findDepartmentPaginated(page, size);
-        model.addAttribute("departments", departmentRespones.getContent());
+        PaginatedResponse<DepartmentResponse> departmentResponses = departmentServiceImpl.findDepartmentPaginated(page, size);
+        model.addAttribute("departments", departmentResponses.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", departmentRespones.getTotalPages());
+        model.addAttribute("totalPages", departmentResponses.getTotalPages());
         model.addAttribute("pageSize", size);
         return "admin/department/view-list";
     }
@@ -50,17 +46,11 @@ public class DepartmentController {
         return "admin/employee/view-list-employee-in-dept";
     }
 
-    // Get Add View
     @GetMapping("/add-department")
     public String getAddDepartmentPage() {
         return "admin/department/add";
     }
 
-    @GetMapping("/add-employee")
-    public String getAddEmployeePage(Model model){
-        model.addAttribute("departments", departmentServiceImpl.findAll());
-        return "admin/employee/add";
-    }
 
     @GetMapping("/edit-department/{id}")
     public String getEditDepartmentPage(@PathVariable("id") int id, Model model) {
@@ -76,17 +66,8 @@ public class DepartmentController {
 
     @PostMapping("/edit-department")
     public String updateDepartment(@RequestParam("id") int id,
-                                   @RequestParam("name") String name,
-                                   Model model,
-                                   Locale locale) {
-        try {
-            departmentServiceImpl.update(id, name);
-        } catch (RuntimeException e) {
-            String errorMessage = messageSource.getMessage("error.name.duplicate", null, locale);
-            model.addAttribute("errorMessage", errorMessage);
-            model.addAttribute("department", departmentServiceImpl.find(id));
-            return "admin/department/edit";
-        }
+                                   @RequestParam("name") String name) {
+        departmentServiceImpl.update(id, name);
         return "redirect:/admin/departments/department-management";
     }
 

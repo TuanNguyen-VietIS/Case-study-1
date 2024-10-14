@@ -29,19 +29,14 @@ public class Employee {
 
     LocalDate dOB;
 
-    @Min(value = 0, message = "error.salary")
     int salary;
 
-    @Min(value = 1, message = "error.level")
-    @Max(value = 10, message = "error.level")
     int level;
 
-    @Email(message = "error.email")
     String email;
 
     String password;
 
-    @Pattern(regexp = "\\d{10}", message = "error.phoneNumber")
     String phoneNumber;
 
     String note;

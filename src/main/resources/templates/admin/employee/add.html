@@ -23,22 +23,22 @@
 
     <h2 th:text="#{header.add-employee}">Thêm nhân viên</h2>
 
-    <div id="toast-error" class="color: red; text-align: center; font-size: 16px; margin: 20px 0;">
+    <div id="toast-error" style="color: red; text-align: center; font-size: 16px; margin: 20px 0;">
         <span th:text="${errorMessage}"></span>
     </div>
 
     <form class="edit-form" action="/admin/employees/add-employee" method="post" enctype="multipart/form-data">
-        <label th:text="#{table.employee-name}">Tên nhân viên:</label>
-        <input type="text" th:name="name" required/>
+        <label for="name" th:text="#{table.employee-name}">Tên nhân viên:</label>
+        <input type="text" id="name" th:name="name" required/>
 
-        <label>Email:</label>
-        <input type="text" th:name="email" required/>
+        <label for="email">Email:</label>
+        <input type="text" id="email" th:name="email" required/>
 
-        <label th:text="#{table.password}">Nhập mật khẩu:</label>
-        <input type="text" th:name="password" required/>
+        <label for="password" th:text="#{table.password}">Nhập mật khẩu:</label>
+        <input type="text" id="password" th:name="password" required/>
 
-        <label th:text="#{table.department-name}">Phòng ban:</label>
-        <select th:name="departmentId" required>
+        <label for="departments" th:text="#{table.department-name}">Phòng ban:</label>
+        <select th:name="departmentId" id="departments" required>
             <option th:each="dept : ${departments}"
                     th:value="${dept.id}"
                     th:text="${dept.name}">Phòng ban</option>
@@ -54,20 +54,20 @@
             <option value="0" th:text="#{table.gender.female}">Nữ</option>
         </select>
 
-        <label th:text="#{table.edit.level}">Cấp độ (Từ 1 đến 10):</label>
-        <input type="text" th:name="level" required/>
+        <label for="level" th:text="#{table.edit.level}">Cấp độ (Từ 1 đến 10):</label>
+        <input type="text" id="level" th:name="level" required/>
 
-        <label th:text="#{table.salary}">Lương:</label>
-        <input type="text" th:name="salary" required/>
+        <label for="salary" th:text="#{table.salary}">Lương:</label>
+        <input type="text" id="salary" th:name="salary" required/>
 
-        <label th:text="#{table.phone-number}">Số điện thoại:</label>
-        <input type="text" th:name="phoneNumber" required/>
+        <label for="phoneNumber" th:text="#{table.phone-number}">Số điện thoại:</label>
+        <input type="text" id="phoneNumber" th:name="phoneNumber" required/>
 
         <label for="dateOfBirth" th:text="#{table.date-of-birth}">Ngày sinh:</label>
         <input type="date" id="dateOfBirth" th:name="dateOfBirth" required />
 
-        <label th:text="#{table.note}">Lưu ý:</label>
-        <input type="text" th:name="note"/>
+        <label for="note" th:text="#{table.note}">Lưu ý:</label>
+        <input type="text" id="note" th:name="note"/>
 
         <button type="submit" th:text="#{table.button.add}">Tạo</button>
         <a href="/admin/employees/employee-management" th:text="#{table.edit.cancel}">Hủy</a>

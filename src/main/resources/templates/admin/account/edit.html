@@ -19,15 +19,15 @@
     <form th:object="${employee}" class="edit-form" action="/admin/accounts/edit-account" method="post">
         <input type="hidden" th:field="*{id}"/>
 
-        <label th:text="#{table.account-name}">Tên:</label>
-        <input type="text" th:field="*{name}" required/>
+        <label for="name" th:text="#{table.account-name}">Tên:</label>
+        <input type="text" id="name" th:field="*{name}" required/>
 
 
-        <label>Email:</label>
-        <input type="email" th:field="*{email}" required/>
+        <label for="email">Email:</label>
+        <input type="email" id="email" th:field="*{email}" required/>
 
-        <label th:text="#{table.password}">Password:</label>
-        <input type="text" th:field="*{password}" required/>
+        <label for="password" th:text="#{table.password}">Password:</label>
+        <input type="text" id="password" th:field="*{password}" required/>
 
         <button type="submit" th:text="#{table.button.save}">Lưu</button>
         <a href="/admin/accounts/account-management" th:text="#{table.edit.cancel}">Hủy</a>
