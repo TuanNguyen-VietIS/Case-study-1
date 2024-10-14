@@ -12,13 +12,13 @@
 
     <h2 th:text="#{header.add-department}">Thêm phòng ban</h2>
 
-    <div id="toast-error" class="color: red; text-align: center; font-size: 16px; margin: 20px 0;">
+    <div id="toast-error" style="color: red; text-align: center; font-size: 16px; margin: 20px 0;">
         <span th:text="${errorMessage}"></span>
     </div>
 
     <form class="edit-form" action="/admin/departments/add-department" method="post">
-        <label th:text="#{table.department-name}">Tên phòng ban:</label>
-        <input type="text" th:name="name" required/>
+        <label for="name" th:text="#{table.department-name}">Tên phòng ban:</label>
+        <input type="text" id="name" th:name="name" required/>
 
         <button type="submit" th:text="#{table.button.add}">Tạo</button>
         <a href="/admin/departments/department-management" th:text="#{table.edit.cancel}">Hủy</a>
@@ -29,7 +29,7 @@
     <script>
         window.onload = function () {
             setTimeout(function () {
-                var toastElement = document.getElementById("toast-error");
+                const toastElement = document.getElementById("toast-error");
                 console.log(toastElement)
                 if (toastElement) {
                     toastElement.style.display = "none";

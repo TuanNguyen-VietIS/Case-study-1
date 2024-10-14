@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -36,7 +35,6 @@ public class EmployeeController {
     EmployeeService employeeServiceImpl;
     DepartmentService departmentServiceImpl;
     FileStorageService fileStorageServiceImpl;
-    MessageSource messageSource;
 
     @GetMapping("/employee-management")
     public String getEmployeeManagementPage(
@@ -86,17 +84,7 @@ public class EmployeeController {
         String path = fileStorageServiceImpl.save(imageFile);
         employee.setImageUrl(path);
 
-        try {
-            employeeServiceImpl.save(employee);
-        } catch (RuntimeException e) {
-            String errorMessage = messageSource.getMessage("error.duplicate", null, locale);
-            model.addAttribute("errorMessage", errorMessage);
-
-            model.addAttribute("employees", employeeServiceImpl.findAll());
-
-            model.addAttribute("departments", departmentServiceImpl.findAll());
-            return "admin/employee/add";
-        }
+        employeeServiceImpl.save(employee);
 
         return "redirect:/admin/employees/employee-management";
     }
@@ -124,14 +112,14 @@ public class EmployeeController {
             Model model) {
 
         Pageable pageable = PageRequest.of(page - 1, size);
-        PaginatedResponse<EmployeeResponse> employeesPage = employeeServiceImpl.searchEmployees(query, filterType, pageable);
+        PaginatedResponse<EmployeeResponse> employeeResponses = employeeServiceImpl.searchEmployees(query, filterType, pageable);
 
-        model.addAttribute("employees", employeesPage.getContent());
+        model.addAttribute("employees", employeeResponses.getContent());
         model.addAttribute("currentPage", page);
-        model.addAttribute("totalPages", employeesPage.getTotalPages());
+        model.addAttribute("totalPages", employeeResponses.getTotalPages());
         model.addAttribute("pageSize", size);
 
-        String tableBodyHtml = generateTableBodyHtml(employeesPage.getContent());
+        String tableBodyHtml = generateTableBodyHtml(employeeResponses.getContent());
 
         return ResponseEntity.ok(tableBodyHtml);
     }

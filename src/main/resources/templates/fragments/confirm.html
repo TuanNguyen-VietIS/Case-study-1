@@ -1,0 +1,10 @@
+<div th:fragment="confirm-form" id="deleteConfirmationModal" class="modal" style="display:none;">
+    <div class="modal-content">
+        <span class="close-button" onclick="closeModal()">&times;</span>
+        <h3 th:text="#{confirm.delete}">Bạn có chắc chắn muốn xóa không?</h3>
+        <div class="button-container">
+            <button id="confirmDeleteButton" th:text="#{button.confirm}">Có</button>
+            <button onclick="closeModal()" th:text="#{button.cancel}">Không</button>
+        </div>
+    </div>
+</div>

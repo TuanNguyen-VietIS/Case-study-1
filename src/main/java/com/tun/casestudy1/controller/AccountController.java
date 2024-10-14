@@ -8,12 +8,9 @@ import jakarta.validation.Valid;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Locale;
 
 @Controller
 @RequestMapping("/admin/accounts")
@@ -22,7 +19,6 @@ import java.util.Locale;
 public class AccountController {
 
     EmployeeService employeeServiceImpl;
-    MessageSource messageSource;
 
     @GetMapping("/account-management")
     public String getAccountManagementPage(
@@ -51,17 +47,8 @@ public class AccountController {
 
     @PostMapping("/edit-account")
     public String updateAccount(@RequestParam("id") int id,
-                                @Valid @ModelAttribute UpdateAccountRequest employee,
-                                Model model,
-                                Locale locale) {
-        try {
-            employeeServiceImpl.updateAccount(id, employee);
-        } catch (RuntimeException e) {
-            String errorMessage = messageSource.getMessage("error.duplicate", null, locale);
-            model.addAttribute("errorMessage", errorMessage);
-            model.addAttribute("employee", employeeServiceImpl.findAccount(id));
-            return "admin/account/edit";
-        }
+                                @Valid @ModelAttribute UpdateAccountRequest employee) {
+        employeeServiceImpl.updateAccount(id, employee);
         return "redirect:/admin/accounts/account-management";
     }
 

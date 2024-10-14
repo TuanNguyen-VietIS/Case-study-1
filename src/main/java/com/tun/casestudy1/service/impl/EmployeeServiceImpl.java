@@ -190,7 +190,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     public List<EmployeeResponse> getListEmployeesInDept(int id) {
         List<Employee> employees = employeeRepository.findAllByDepartmentId(id);
 
-        List<EmployeeResponse> employeeResponses = employees.stream()
+        return employees.stream()
                 .map(employee -> {
                     EmployeeResponse employeeResponse = employeeMapper.toEmployeeResponse(employee);
                     if (employee.getDepartmentId() != null) {
@@ -199,8 +199,6 @@ public class EmployeeServiceImpl implements EmployeeService {
                     return employeeResponse;
                 })
                 .collect(Collectors.toList());
-
-        return employeeResponses;
     }
 
 }

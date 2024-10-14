@@ -1,11 +1,9 @@
 package com.tun.casestudy1.dto.request;
 
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Max;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
 
@@ -22,6 +20,7 @@ public class CreateEmployeeRequest {
 
     String imageUrl;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate dateOfBirth;
 
     @Min(value = 0, message = "error.salary")
@@ -42,4 +41,10 @@ public class CreateEmployeeRequest {
     String note;
 
     Integer departmentId;
+
+    @AssertTrue(message = "error.dOB")
+    public boolean isValidDOB() {
+        return dateOfBirth != null && !dateOfBirth.isBefore(LocalDate.of(1950, 1, 1)) &&
+                !dateOfBirth.isAfter(LocalDate.of(2024, 12, 31));
+    }
 }

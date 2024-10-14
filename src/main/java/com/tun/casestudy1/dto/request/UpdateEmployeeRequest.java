@@ -34,6 +34,7 @@ public class UpdateEmployeeRequest {
 
     @AssertTrue(message = "error.dOB")
     public boolean isValidDOB() {
-        return dOB != null && !dOB.isBefore(LocalDate.of(1950, 1, 1)) && !dOB.isAfter(LocalDate.of(2024, 12, 31));
+        return dOB != null && !dOB.isBefore(LocalDate.of(1950, 1, 1)) &&
+                !dOB.isAfter(LocalDate.of(2024, 12, 31));
     }
 }
