@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{message.employee-management}">Danh sách từ khóa</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" type="text/css" href="/css/keyword-form.css">
+    <style>
+        .title-button {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: row;
+            padding: 10px;
+            gap: 10px;
+            margin-bottom: -15px;
+        }
+        .title-button h2 {
+            margin: 0;
+        }
+        .table-container {
+            margin-top: 50px;
+            max-width: 100%;
+            max-height: 1000px;
+            overflow-x: auto;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%; /* Đặt chiều rộng bảng là 100% */
+            border-collapse: collapse; /* Kết hợp các viền ô */
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            min-width: 100px; /* Chiều rộng tối thiểu */
+            max-width: 800px; /* Chiều rộng tối đa */
+            text-overflow: ellipsis; /* Hiển thị dấu ba chấm nếu vượt quá giới hạn */
+            white-space: nowrap; /* Không cho phép xuống dòng */
+            overflow: hidden; /* Ẩn phần vượt quá nếu cột quá nhỏ */
+        }
+
+        img {
+            width: 200px;
+            height: 200px;
+            object-fit: contain;
+        }
+
+        .image-popup {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            padding-top: 50px;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+        }
+
+        .popup-content {
+            margin: auto;
+            display: block;
+            /*max-width: 80%;*/
+            /*max-height: 80%;*/
+        }
+
+        .close-popup {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .icon {
+            cursor: pointer;
+            font-size: 20px;
+            color: blue;
+        }
+
+        .suggestions-column {
+            min-width: 150px; /* Tùy chỉnh theo yêu cầu */
+            max-width: 400px; /* Tùy chỉnh chiều rộng tối đa */
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+<div class="title-button">
+    <h2>Lịch sử tìm kiếm</h2>
+    <label for="date">Date:</label>
+    <input type="month" id="date" name="date" value="2024-10" th:onchange="updateDaysInTable()">
+    <button th:onclick="|location.href='/admin/employees/add-employee'|">Chuyển đổi</button>
+    <button th:onclick="openModal()">Thêm mới</button>
+</div>
+
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Từ khóa tìm kiếm</th>
+            <th>Từ khóa hiển thị</th>
+            <th>Nền tảng</th>
+            <th>Thiết bị</th>
+            <th>Kiểu so khớp</th>
+            <th>01</th>
+            <th>02</th>
+            <th>03</th>
+            <th>04</th>
+            <th>05</th>
+            <th>06</th>
+            <th>07</th>
+            <th>08</th>
+            <th>09</th>
+            <th>10</th>
+            <th>11</th>
+            <th>12</th>
+            <th>13</th>
+            <th>14</th>
+            <th>15</th>
+            <th>16</th>
+            <th>17</th>
+            <th>18</th>
+            <th>19</th>
+            <th>20</th>
+            <th>21</th>
+            <th>22</th>
+            <th>23</th>
+            <th>24</th>
+            <th>25</th>
+            <th>26</th>
+            <th>27</th>
+            <th>28</th>
+            <th>29</th>
+            <th>30</th>
+            <th>31</th>
+        </tr>
+        </thead>
+        <tbody >
+        <tr th:each="keyword : ${keywords}">
+            <td th:text="${keyword.keyword}"></td>
+            <td th:text="${keyword.matchKeyword}"></td>
+            <td th:text="${keyword.platform}"></td>
+            <td th:text="${keyword.device}"></td>
+            <td th:text="${keyword.matchingPattern}"></td>
+            <td th:each="result : ${keyword.searchResults}">
+                <div>
+                    <span class="icon" data-image-src="${result.screenshotPath}" onclick="openImagePopup(this)">&#128269;</span>
+                    <br>
+                    <span class="suggestions-column" th:utext="${result.suggestions}"></span>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<div id="imagePopup" class="image-popup">
+    <span class="close-popup" onclick="closeImagePopup()">&times;</span>
+    <img class="popup-content" id="popupImage" src="" alt="Image Preview">
+</div>
+
+<div id="addKeywordModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+        <h3>Thêm Từ Khóa</h3>
+        <form class="modal-form" th:action="@{/admin/keywords/add-keyword}" method="post">
+            <label for="keyword">Từ khóa tìm kiếm:</label>
+            <input type="text" id="keyword" th:name="keyword" required>
+            <label for="matchKeyword">Từ khóa hiển thị:</label>
+            <input type="text" id="matchKeyword" th:name="matchKeyword" required>
+            <label for="platform">Nền tảng:</label>
+            <select id="platform" th:name="platform" required>
+                <option value="google">Google</option>
+                <option value="yahoo">Yahoo</option>
+            </select>
+            <label for="matchingPattern">Kiểu so khớp:</label>
+            <select id="matchingPattern" th:name="matchingPattern" required>
+                <option value="partial">Chính xác</option>
+                <option value="exact">Gần đúng</option>
+            </select>
+            <label>Thiết bị:</label>
+            <div class="radio-group">
+                <div>
+                    <input type="radio" id="pc" th:name="device" value="pc" required>
+                    <label for="pc">PC</label>
+                </div>
+                <div>
+                    <input type="radio" id="smartphone" th:name="device" value="smartphone" required>
+                    <label for="smartphone">Smartphone</label>
+                </div>
+            </div>
+            <button type="submit" class="btn-add-keyword">Thêm Từ Khóa</button>
+        </form>
+    </div>
+</div>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
+
+<script>
+    function openModal() {
+        const modal = document.getElementById('addKeywordModal');
+        modal.style.display = 'block';
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('addKeywordModal');
+        modal.style.display = 'none';
+    }
+
+    function openImagePopup(element) {
+        const imageSrc = element.getAttribute('data-image-src');
+        const popup = document.getElementById("imagePopup");
+        const popupImage = document.getElementById("popupImage");
+        popupImage.src = imageSrc;
+        popup.style.display = "block";
+    }
+
+    function closeImagePopup() {
+        const popup = document.getElementById("imagePopup");
+        popup.style.display = "none";
+    }
+
+    window.onclick = function(event) {
+        const modal = document.getElementById('addKeywordModal');
+        const popup = document.getElementById("imagePopup");
+        if (event.target === modal) {
+            closeModal();
+            closeImagePopup();
+        }
+    }
+
+    function updateTableHeaders() {
+        const dateInput = document.getElementById('date');
+        const selectedDate = new Date(dateInput.value);
+        const year = selectedDate.getFullYear();
+        const month = selectedDate.getMonth();
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+        const tableHeaders = document.querySelectorAll('table thead tr th');
+
+        // Bắt đầu từ cột 5, nhưng đảm bảo tính toán đúng chỉ số của ngày
+        let dayIndex = 1; // Ngày đầu tiên của tháng bắt đầu từ 1
+
+        for (let i = 5; i < tableHeaders.length; i++) {
+            if (dayIndex <= daysInMonth) {
+                tableHeaders[i].style.display = '';
+                tableHeaders[i].textContent = dayIndex; // Đặt số thứ tự chính xác của ngày
+                dayIndex++;
+            } else {
+                tableHeaders[i].style.display = 'none';
+            }
+        }
+    }
+
+
+    window.addEventListener('DOMContentLoaded', () => {
+        const dateInput = document.getElementById('date');
+        dateInput.addEventListener('change', updateTableHeaders);
+        updateTableHeaders();
+    });
+</script>
+
+<script src="/js/language-selector.js"></script>
+</body>
+</html>
