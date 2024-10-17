@@ -30,5 +30,5 @@ public class SearchResult {
 
     LocalDate searchDate;
 
-    boolean found;
+    int found;
 }

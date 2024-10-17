@@ -31,6 +31,11 @@ public class SearchKeywordController {
         return "admin/keyword/view-list";
     }
 
+    @GetMapping("/add-keyword")
+    public String getAddKeywordPage() {
+        return "admin/keyword/add";
+    }
+
     @PostMapping("/add-keyword")
     public String addKeyword(@ModelAttribute CreateSearchKeywordRequest dto) {
         searchKeywordService.save(dto);

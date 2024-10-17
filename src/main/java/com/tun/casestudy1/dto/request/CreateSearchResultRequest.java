@@ -13,7 +13,7 @@ import java.time.LocalDate;
 public class CreateSearchResultRequest {
     String suggestions;
 
-    boolean found;
+    int found;
 
     String screenshotPath;
 

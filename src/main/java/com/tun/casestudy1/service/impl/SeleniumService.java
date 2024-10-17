@@ -44,7 +44,7 @@ public class SeleniumService {
 
         List<String> suggestionTexts = extractTextFromSuggestions(suggestions);
 
-        boolean found = matchKeywords(suggestionTexts, inputKeyword, matchKeyword, matchingPattern);
+        int found = matchKeywords(suggestionTexts, inputKeyword, matchKeyword, matchingPattern);
 
         String screenshotPath = captureScreenshot(inputKeyword);
 
@@ -111,21 +111,21 @@ public class SeleniumService {
         return suggestionTexts;
     }
 
-    private boolean matchKeywords(List<String> suggestionTexts, String inputKeyword, String matchKeyword, String matchingPattern) {
+    private int matchKeywords(List<String> suggestionTexts, String inputKeyword, String matchKeyword, String matchingPattern) {
         String combinedKeywords = inputKeyword + " " + matchKeyword;
         for (String suggestion : suggestionTexts) {
             String suggestionText = suggestion.toLowerCase();
             if ("partial".equalsIgnoreCase(matchingPattern)) {
                 if (suggestionText.contains(inputKeyword.toLowerCase()) && suggestionText.contains(matchKeyword.toLowerCase())) {
-                    return true;
+                    return 1;
                 }
             } else if ("exact".equalsIgnoreCase(matchingPattern)) {
                 if (suggestionText.contains(combinedKeywords.toLowerCase())) {
-                    return true;
+                    return 1;
                 }
             }
         }
-        return false;
+        return 0;
     }
 
     private String getSearchUrl(String platform) {

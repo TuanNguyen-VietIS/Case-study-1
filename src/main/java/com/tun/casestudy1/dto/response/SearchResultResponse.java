@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -13,9 +14,9 @@ import java.time.LocalDate;
 public class SearchResultResponse {
     int id;
 
-    String suggestions;
+    List<String> suggestions;
 
-    boolean found;
+    int found;
 
     String screenshotPath;
 

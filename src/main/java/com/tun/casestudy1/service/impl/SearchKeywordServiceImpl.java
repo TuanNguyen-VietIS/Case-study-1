@@ -17,6 +17,7 @@ import lombok.experimental.FieldDefaults;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -59,7 +60,19 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
     private SearchKeywordWithResultsResponse convertToSearchKeywordWithResultsResponse(SearchKeyword searchKeyword) {
         List<SearchResultResponse> searchResults = searchKeyword.getSearchResults()
                 .stream()
-                .map(searchResultMapper::toSearchResultResponse)
+                .map(searchResult -> {
+                    SearchResultResponse searchResultResponse = searchResultMapper.toSearchResultResponse(searchResult);
+                    String stringSuggestions = searchResult.getSuggestions();
+                    List<String> listSuggestions = new ArrayList<>();
+
+                    String[] items = stringSuggestions.split("<br>");
+                    for (String item : items) {
+                        listSuggestions.add(item.trim());
+                    }
+
+                    searchResultResponse.setSuggestions(listSuggestions);
+                    return searchResultResponse;
+                })
                 .collect(Collectors.toList());
 
         return SearchKeywordWithResultsResponse.builder()

@@ -4,6 +4,7 @@ import com.tun.casestudy1.dto.request.CreateSearchResultRequest;
 import com.tun.casestudy1.dto.response.SearchResultResponse;
 import com.tun.casestudy1.entity.SearchResult;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
 @Mapper(componentModel = "spring",
@@ -11,5 +12,6 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 public interface SearchResultMapper {
     SearchResult toSearchResult(CreateSearchResultRequest request);
 
+    @Mapping(target="suggestions", ignore = true)
     SearchResultResponse toSearchResultResponse(SearchResult searchResult);
 }
