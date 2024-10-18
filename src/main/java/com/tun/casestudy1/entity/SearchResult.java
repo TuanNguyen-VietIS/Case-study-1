@@ -25,6 +25,8 @@ public class SearchResult {
 
     String screenshotPath;
 
+    String stringFound;
+
     @Column(columnDefinition = "TEXT")
     String suggestions;
 

@@ -1,0 +1,31 @@
+<tbody id="searchTableBody">
+<tr th:each="keyword : ${keywords}">
+    <td th:text="${keyword.keyword}"></td>
+    <td th:text="${keyword.matchKeyword}"></td>
+    <td>
+        <span th:if="${keyword.platform == 'google'}" style="color:blue">
+            <i class="fab fa-google"></i>
+            <span th:text="#{platform.google}"></span>
+        </span>
+        <span th:if="${keyword.platform == 'yahoo'}" style="color:red">
+            <i class="fab fa-yahoo"></i>
+            <span th:text="#{platform.yahoo}"></span>
+        </span>
+    </td>
+    <td th:text="${keyword.device}"></td>
+    <td th:text="${keyword.matchingPattern}"></td>
+    <td th:each="i : ${#numbers.sequence(1, daysInMonth)}">
+        <div th:each="result : ${keyword.searchResults}" th:if="${result.searchDate.dayOfMonth == i}">
+            <div>
+                <a th:href="@{/{imagePath}(imagePath = ${result.screenshotPath})}">&#128269;</a>
+                <br>
+                <span class="suggestions-column" th:each="suggestion : ${result.suggestions}">
+                        <span th:style="${result.stringFound == suggestion ? 'color: red;' : 'color: black;'}"
+                              th:text="${suggestion}"></span>
+                        <br>
+                    </span>
+            </div>
+        </div>
+    </td>
+</tr>
+</tbody>

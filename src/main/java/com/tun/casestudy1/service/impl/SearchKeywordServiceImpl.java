@@ -14,9 +14,9 @@ import com.tun.casestudy1.service.SearchKeywordService;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -48,18 +48,22 @@ public class SearchKeywordServiceImpl implements SearchKeywordService {
                 .orElseThrow(() -> new AppException(ErrorCode.NOT_EXISTED));
         return searchKeywordMapper.toSearchKeywordResponse(searchKeyword);
     }
-
     @Override
-    public List<SearchKeywordWithResultsResponse> getAllKeywordsWithResults() {
+    public List<SearchKeywordWithResultsResponse> getKeywordsWithResultsByMonthAndYear(int month, int year) {
         List<SearchKeyword> searchKeywords = searchKeywordRepository.findAll();
         return searchKeywords.stream()
-                .map(this::convertToSearchKeywordWithResultsResponse)
+                .map(searchKeyword -> convertToSearchKeywordWithResultsResponse(searchKeyword, month, year))
                 .collect(Collectors.toList());
     }
 
-    private SearchKeywordWithResultsResponse convertToSearchKeywordWithResultsResponse(SearchKeyword searchKeyword) {
+    private SearchKeywordWithResultsResponse convertToSearchKeywordWithResultsResponse(SearchKeyword searchKeyword, int month, int year) {
         List<SearchResultResponse> searchResults = searchKeyword.getSearchResults()
                 .stream()
+                .filter(searchResult -> {
+                    // Lọc các kết quả theo tháng và năm của searchDate
+                    LocalDate searchDate = searchResult.getSearchDate();
+                    return searchDate.getMonthValue() == month && searchDate.getYear() == year;
+                })
                 .map(searchResult -> {
                     SearchResultResponse searchResultResponse = searchResultMapper.toSearchResultResponse(searchResult);
                     String stringSuggestions = searchResult.getSuggestions();

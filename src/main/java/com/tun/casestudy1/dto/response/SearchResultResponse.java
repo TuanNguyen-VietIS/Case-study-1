@@ -14,6 +14,8 @@ import java.util.List;
 public class SearchResultResponse {
     int id;
 
+    String stringFound;
+
     List<String> suggestions;
 
     int found;

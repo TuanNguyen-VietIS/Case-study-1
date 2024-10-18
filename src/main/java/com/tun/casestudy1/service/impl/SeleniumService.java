@@ -2,18 +2,16 @@ package com.tun.casestudy1.service.impl;
 
 import com.tun.casestudy1.dto.request.CreateSearchResultRequest;
 import com.tun.casestudy1.dto.response.SearchResultResponse;
+import com.tun.casestudy1.dto.response.StringFoundResponse;
 import com.tun.casestudy1.service.SearchResultService;
 import com.tun.casestudy1.utility.ScreenshotUtil;
 import jakarta.annotation.PreDestroy;
-import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -44,7 +42,7 @@ public class SeleniumService {
 
         List<String> suggestionTexts = extractTextFromSuggestions(suggestions);
 
-        int found = matchKeywords(suggestionTexts, inputKeyword, matchKeyword, matchingPattern);
+        StringFoundResponse stringFoundResponse = matchKeywords(suggestionTexts, inputKeyword, matchKeyword, matchingPattern);
 
         String screenshotPath = captureScreenshot(inputKeyword);
 
@@ -53,7 +51,8 @@ public class SeleniumService {
                 .searchDate(LocalDate.now())
                 .screenshotPath(screenshotPath)
                 .suggestions(String.join("<br>", suggestionTexts))
-                .found(found)
+                .stringFound(stringFoundResponse.getStringFound())
+                .found(stringFoundResponse.getFound())
                 .build();
 
         return searchResultService.save(request);
@@ -111,21 +110,31 @@ public class SeleniumService {
         return suggestionTexts;
     }
 
-    private int matchKeywords(List<String> suggestionTexts, String inputKeyword, String matchKeyword, String matchingPattern) {
+    private StringFoundResponse matchKeywords(List<String> suggestionTexts, String inputKeyword, String matchKeyword, String matchingPattern) {
         String combinedKeywords = inputKeyword + " " + matchKeyword;
+        StringFoundResponse stringFoundResponse;
         for (String suggestion : suggestionTexts) {
             String suggestionText = suggestion.toLowerCase();
             if ("partial".equalsIgnoreCase(matchingPattern)) {
                 if (suggestionText.contains(inputKeyword.toLowerCase()) && suggestionText.contains(matchKeyword.toLowerCase())) {
-                    return 1;
+                     return StringFoundResponse.builder()
+                            .found(1)
+                            .stringFound(suggestionText)
+                            .build();
                 }
             } else if ("exact".equalsIgnoreCase(matchingPattern)) {
                 if (suggestionText.contains(combinedKeywords.toLowerCase())) {
-                    return 1;
+                    return StringFoundResponse.builder()
+                            .found(1)
+                            .stringFound(suggestionText)
+                            .build();
                 }
             }
         }
-        return 0;
+        return StringFoundResponse.builder()
+                .found(0)
+                .stringFound("")
+                .build();
     }
 
     private String getSearchUrl(String platform) {

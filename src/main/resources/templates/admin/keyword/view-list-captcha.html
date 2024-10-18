@@ -46,12 +46,11 @@
             overflow: hidden;
         }
 
-        .suggestions-column {
-            min-width: 150px;
-            max-width: 400px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        .icon-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
         }
 
         a {
@@ -66,7 +65,7 @@
         <h2 th:text="#{title.employee-history}">Lịch sử tìm kiếm</h2>
         <label for="date" th:text="#{label.date}">Date:</label>
         <input type="month" id="date" name="date" value="2024-10"  th:onchange="updateTable()">
-        <button th:onClick="|location.href='/admin/keywords/list-captcha'|" th:text="#{table.button.switch}">Chuyển đổi</button>
+        <button th:onClick="|location.href='/admin/keywords'|" th:text="#{table.button.switch}">Chuyển đổi</button>
         <button th:onclick="|location.href='/admin/keywords/add-keyword'|" th:text="#{table.button.add}">Thêm</button>
     </div>
 
@@ -82,7 +81,7 @@
                 <th style="text-align:center" th:each="i : ${#numbers.sequence(1, 31)}" th:text="${i}"></th>
             </tr>
             </thead>
-            <tbody id="searchTableBody">
+            <tbody id="captchaTableBody">
             <tr th:each="keyword : ${keywords}">
                 <td th:text="${keyword.keyword}"></td>
                 <td th:text="${keyword.matchKeyword}"></td>
@@ -100,14 +99,9 @@
                 <td th:text="${keyword.matchingPattern}"></td>
                 <td th:each="i : ${#numbers.sequence(1, 31)}">
                     <div th:each="result : ${keyword.searchResults}" th:if="${result.searchDate.dayOfMonth == i}">
-                        <div>
-                            <a th:href="@{/{imagePath}(imagePath = ${result.screenshotPath})}">&#128269;</a>
-                            <br>
-                            <span class="suggestions-column" th:each="suggestion : ${result.suggestions}">
-                                <span th:style="${result.stringFound == suggestion ? 'color: red;' : 'color: black;'}"
-                                      th:text="${suggestion}"></span>
-                                <br>
-                            </span>
+                        <div class="icon-cell">
+                            <a th:href="@{/{imagePath}(imagePath = ${result.screenshotPath})}" th:if="${result.found == 1}" style="color: green;">&#10004;</a>
+                            <a th:href="@{/{imagePath}(imagePath = ${result.screenshotPath})}" th:if="${result.found == 0}" style="color: red;">&#8212;</a>
                         </div>
                     </div>
                 </td>
@@ -123,7 +117,7 @@
             const dateInput = document.getElementById('date');
             const selectedDate = dateInput.value;
 
-            fetch(`/admin/keywords/table?date=${selectedDate}&mode=keyword`)
+            fetch(`/admin/keywords/list-captcha/table?date=${selectedDate}&mode=captcha`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok');
@@ -131,7 +125,7 @@
                     return response.text();
                 })
                 .then(html => {
-                    document.getElementById('searchTableBody').innerHTML = html;
+                    document.getElementById('captchaTableBody').innerHTML = html;
                     updateTableHeaders();
                 })
                 .catch(error => {

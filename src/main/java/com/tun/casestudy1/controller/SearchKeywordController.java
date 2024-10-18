@@ -1,7 +1,6 @@
 package com.tun.casestudy1.controller;
 
 import com.tun.casestudy1.dto.request.CreateSearchKeywordRequest;
-import com.tun.casestudy1.dto.response.SearchKeywordResponse;
 import com.tun.casestudy1.dto.response.SearchKeywordWithResultsResponse;
 import com.tun.casestudy1.service.SearchKeywordService;
 import lombok.AccessLevel;
@@ -9,11 +8,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.List;
 
 @Controller
@@ -26,9 +24,41 @@ public class SearchKeywordController {
 
     @GetMapping
     public String getSearchKeywordPage(Model model) {
-        List<SearchKeywordWithResultsResponse> keywordResponses = searchKeywordService.getAllKeywordsWithResults();
+        List<SearchKeywordWithResultsResponse> keywordResponses;
+        LocalDate currentDate = LocalDate.now();
+        keywordResponses = searchKeywordService.getKeywordsWithResultsByMonthAndYear(currentDate.getMonthValue(), currentDate.getYear());
         model.addAttribute("keywords", keywordResponses);
         return "admin/keyword/view-list";
+    }
+
+    @GetMapping("/list-captcha")
+    public String getKeywordCaptchaPage(Model model) {
+        List<SearchKeywordWithResultsResponse> keywordResponses;
+        LocalDate currentDate = LocalDate.now();
+        keywordResponses = searchKeywordService.getKeywordsWithResultsByMonthAndYear(currentDate.getMonthValue(), currentDate.getYear());
+        model.addAttribute("keywords", keywordResponses);
+        return "admin/keyword/view-list-captcha";
+    }
+
+    @GetMapping({"/table", "/list-captcha/table"})
+    public String getSearchKeywordPage(@RequestParam(value = "date", required = false) String date,
+                                       String mode,
+                                       Model model) {
+        List<SearchKeywordWithResultsResponse> keywordResponses;
+        LocalDate selectedDate;
+
+        if (date != null && !date.isEmpty()) {
+            selectedDate = LocalDate.parse(date + "-01"); // Chỉ cần ngày đầu tháng
+            keywordResponses = searchKeywordService.getKeywordsWithResultsByMonthAndYear(selectedDate.getMonthValue(), selectedDate.getYear());
+        } else {
+            selectedDate = LocalDate.now();
+            keywordResponses = searchKeywordService.getKeywordsWithResultsByMonthAndYear(selectedDate.getMonthValue(), selectedDate.getYear());
+        }
+
+        int daysInMonth = YearMonth.from(selectedDate).lengthOfMonth();
+        model.addAttribute("keywords", keywordResponses);
+        model.addAttribute("daysInMonth", daysInMonth);
+        return mode.equals("keyword") ? "fragments/keyword-table-body" : "fragments/captcha-table-body";
     }
 
     @GetMapping("/add-keyword")

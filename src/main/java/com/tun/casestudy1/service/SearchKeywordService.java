@@ -14,5 +14,5 @@ public interface SearchKeywordService {
 
     SearchKeywordResponse find(int id);
 
-    List<SearchKeywordWithResultsResponse> getAllKeywordsWithResults();
+    List<SearchKeywordWithResultsResponse> getKeywordsWithResultsByMonthAndYear(int month, int year);
 }

@@ -13,6 +13,8 @@ import java.time.LocalDate;
 public class CreateSearchResultRequest {
     String suggestions;
 
+    String stringFound;
+
     int found;
 
     String screenshotPath;
