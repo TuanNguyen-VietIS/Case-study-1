@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.employee-history}">Lịch sử tìm kiếm</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/table.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        .title-button {
+            display: flex;
+            justify-content: space-evenly;
+            align-items: center;
+            flex-direction: row;
+            padding: 10px;
+            gap: 10px;
+            margin-bottom: -15px;
+        }
+        .title-button h2 {
+            margin: 0;
+        }
+        .table-container {
+            margin-top: 50px;
+            max-width: 100%;
+            max-height: 400px;
+            overflow-x: auto;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid #ccc;
+            text-align: left;
+            min-width: 100px;
+            max-width: 800px;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+        }
+
+        .suggestions-column {
+            min-width: 150px;
+            max-width: 400px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        a {
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <div class="title-button">
+        <h2 th:text="#{title.employee-history}">Lịch sử tìm kiếm</h2>
+        <label for="date" th:text="#{label.date}">Date:</label>
+        <input type="month" id="date" name="date" value="2024-10"  th:onchange="updateTable()">
+        <button th:onClick="|location.href='/admin/keywords/list-captcha'|" th:text="#{table.button.switch}">Chuyển đổi</button>
+        <button th:onclick="|location.href='/admin/keywords/add-keyword'|" th:text="#{table.button.add}">Thêm</button>
+    </div>
+
+    <div class="table-container">
+        <table>
+            <thead>
+            <tr>
+                <th th:text="#{table.keyword.search}">Từ khóa tìm kiếm</th>
+                <th th:text="#{table.keyword.match}">Từ khóa hiển thị</th>
+                <th th:text="#{table.platform}">Nền tảng</th>
+                <th th:text="#{table.device}">Thiết bị</th>
+                <th th:text="#{table.matching.pattern}">Kiểu so khớp</th>
+                <th style="text-align:center" th:each="i : ${#numbers.sequence(1, 31)}" th:text="${i}"></th>
+            </tr>
+            </thead>
+            <tbody id="searchTableBody">
+            <tr th:each="keyword : ${keywords}">
+                <td th:text="${keyword.keyword}"></td>
+                <td th:text="${keyword.matchKeyword}"></td>
+                <td>
+                    <span th:if="${keyword.platform == 'google'}" style="color:blue">
+                        <i class="fab fa-google"></i>
+                        <span th:text="#{platform.google}"></span>
+                    </span>
+                    <span th:if="${keyword.platform == 'yahoo'}" style="color:red">
+                        <i class="fab fa-yahoo"></i>
+                        <span th:text="#{platform.yahoo}"></span>
+                    </span>
+                </td>
+                <td th:text="${keyword.device}"></td>
+                <td th:text="${keyword.matchingPattern}"></td>
+                <td th:each="i : ${#numbers.sequence(1, 31)}">
+                    <div th:each="result : ${keyword.searchResults}" th:if="${result.searchDate.dayOfMonth == i}">
+                        <div>
+                            <a th:href="@{/{imagePath}(imagePath = ${result.screenshotPath})}">&#128269;</a>
+                            <br>
+                            <span class="suggestions-column" th:each="suggestion : ${result.suggestions}">
+                                <span th:style="${result.stringFound == suggestion ? 'color: red;' : 'color: black;'}"
+                                      th:text="${suggestion}"></span>
+                                <br>
+                            </span>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script>
+        function updateTable() {
+            const dateInput = document.getElementById('date');
+            const selectedDate = dateInput.value;
+
+            fetch(`/admin/keywords/table?date=${selectedDate}&mode=keyword`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    document.getElementById('searchTableBody').innerHTML = html;
+                    updateTableHeaders();
+                })
+                .catch(error => {
+                    console.error('There has been a problem with your fetch operation:', error);
+                });
+        }
+
+        function updateTableHeaders() {
+            const dateInput = document.getElementById('date');
+            const selectedDate = new Date(dateInput.value);
+            const year = selectedDate.getFullYear();
+            const month = selectedDate.getMonth();
+            const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+            const tableHeaders = document.querySelectorAll('table thead tr th');
+
+            // Bắt đầu từ cột 5, nhưng đảm bảo tính toán đúng chỉ số của ngày
+            let dayIndex = 1; // Ngày đầu tiên của tháng bắt đầu từ 1
+
+            for (let i = 5; i < tableHeaders.length; i++) {
+                if (dayIndex <= daysInMonth) {
+                    tableHeaders[i].style.display = '';
+                    tableHeaders[i].textContent = dayIndex; // Đặt số thứ tự chính xác của ngày
+                    dayIndex++;
+                } else {
+                    tableHeaders[i].style.display = 'none';
+                }
+            }
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const dateInput = document.getElementById('date');
+            dateInput.addEventListener('change', updateTableHeaders);
+            updateTableHeaders();
+        });
+    </script>
+
+    <script src="/js/language-selector.js"></script>
+</body>
+</html>

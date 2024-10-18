@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="#{title.add.keyword}">Thêm mới từ khóa</title>
+    <link rel="stylesheet" type="text/css" href="/css/footer.css">
+    <link rel="stylesheet" type="text/css" href="/css/navbar-admin.css">
+    <link rel="stylesheet" type="text/css" href="/css/edit-employee.css">
+    <style>
+        .radio-group {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+        }
+
+        .radio-group div {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div th:replace="~{fragments/navbar-admin :: nav}"></div>
+
+    <h2 th:text="#{title.add.keyword}">Thêm Từ Khóa</h2>
+
+    <form class="edit-form" th:action="@{/admin/keywords/add-keyword}" method="post">
+        <label for="keyword" th:text="#{label.keyword}">Từ khóa tìm kiếm:</label>
+        <input type="text" id="keyword" th:name="keyword" required>
+        <label for="matchKeyword" th:text="#{label.matchKeyword}">Từ khóa hiển thị:</label>
+        <input type="text" id="matchKeyword" th:name="matchKeyword" required>
+        <label for="platform" th:text="#{label.platform}">Nền tảng:</label>
+        <select id="platform" th:name="platform" required style="width: 50%;padding: 8px;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;">
+            <option value="google">Google</option>
+            <option value="yahoo">Yahoo</option>
+        </select>
+        <label for="matchingPattern" th:text="#{label.matchingPattern}">Kiểu so khớp:</label>
+        <select id="matchingPattern" th:name="matchingPattern" required style="width: 50%;padding: 8px;border: 1px solid #ccc;border-radius: 4px;box-sizing: border-box;">
+            <option value="exact">Chính xác</option>
+            <option value="partial">Gần đúng</option>
+        </select>
+        <label th:text="#{label.device}">Thiết bị:</label>
+        <div class="radio-group">
+            <div>
+                <input type="radio" id="pc" th:name="device" value="pc" required>
+                <label for="pc" th:text="#{label.pc}">PC</label>
+            </div>
+            <div>
+                <input type="radio" id="smartphone" th:name="device" value="smartphone" required>
+                <label for="smartphone" th:text="#{label.smartphone}">Smartphone</label>
+            </div>
+        </div>
+        <button type="submit" class="btn-add-keyword" th:text="#{button.add.keyword}">Thêm Từ Khóa</button>
+        <a href="/admin/keywords" th:text="#{button.cancel}">Hủy</a>
+    </form>
+
+    <div th:replace="~{fragments/footer :: footer}"></div>
+
+    <script src="/js/language-selector.js"></script>
+</body>
+</html>
